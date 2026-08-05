@@ -92,7 +92,8 @@ Then in Cloudflare Pages, choose **Upload assets** and upload the contents of `d
 - [ ] Replace the placeholder phone number in [`src/data/site.ts`](src/data/site.ts) (`SITE.phone` / `SITE.phoneHref`) with the real business number.
 - [ ] Confirm `complaints@` and `hello@` mailboxes in [`src/data/site.ts`](src/data/site.ts) exist and are monitored.
 - [ ] Once real, consented feedback exists via `/feedback` (opt-in checkbox ticked), manually add a Testimonials section — none is included by default, by design.
-- [ ] Verify `sitemap-index.xml` and `robots.txt` are reachable at the production domain after first deploy.
+- [ ] Verify `sitemap.xml` and `robots.txt` are reachable at the production domain after first deploy.
+- [ ] If a page is added or removed later, update `public/sitemap.xml` to match (it's hand-written, not auto-generated — see the note in `astro.config.mjs`).
 
 ## 7. Project structure
 
@@ -105,7 +106,7 @@ src/
   styles/global.css  Tailwind + design-system utility classes (.btn-primary, .card, etc.)
 public/
   favicon.svg, favicon-32x32.png, apple-touch-icon.png, icon-512.png
-  robots.txt, _headers
+  robots.txt, sitemap.xml, _headers
 ```
 
 ## 8. Design tokens

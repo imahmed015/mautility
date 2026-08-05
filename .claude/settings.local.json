@@ -11,7 +11,18 @@
       "PowerShell(python --version 2>&1)",
       "PowerShell(python -c \"import PIL; print\\('PIL ok'\\)\" 2>&1)",
       "PowerShell(Get-Command winget -ErrorAction SilentlyContinue)",
-      "PowerShell(winget install --id OpenJS.NodeJS.LTS -e --accept-package-agreements --accept-source-agreements --silent)"
+      "PowerShell(winget install --id OpenJS.NodeJS.LTS -e --accept-package-agreements --accept-source-agreements --silent)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Program Files\\\\nodejs\",\"C:\\\\Program Files \\(x86\\)\\\\nodejs\",\"$env:APPDATA\\\\npm\",\"$env:LOCALAPPDATA\\\\Programs\" -ErrorAction SilentlyContinue | Select-Object -First 20 Name,FullName)",
+      "Bash(npm --version)",
+      "Bash(git --version)",
+      "PowerShell(node --version)",
+      "PowerShell(npm --version)",
+      "PowerShell($ErrorActionPreference='SilentlyContinue'; Get-Command node -All | Select-Object -First 5; Write-Output \"---\"; where.exe node 2>$null; Write-Output \"---nvm---\"; Get-ChildItem \"$env:ProgramFiles\\\\nodejs\" -ErrorAction SilentlyContinue; Get-ChildItem \"$env:LOCALAPPDATA\\\\nvm\" -ErrorAction SilentlyContinue; Write-Output \"---env path---\"; $env:PATH -split ';' | Select-String -Pattern 'node' -SimpleMatch)",
+      "PowerShell(Get-ChildItem \"C:\\\\Program Files\" -Directory | Where-Object { $_.Name -match 'node|nvm' }; Get-ChildItem \"C:\\\\Program Files \\(x86\\)\" -Directory -ErrorAction SilentlyContinue | Where-Object { $_.Name -match 'node|nvm' }; Write-Output \"---choco---\"; Get-Command choco -ErrorAction SilentlyContinue; Write-Output \"---winget---\"; Get-Command winget -ErrorAction SilentlyContinue; Write-Output \"---appdata local---\"; Get-ChildItem \"$env:LOCALAPPDATA\\\\Programs\" -Directory -ErrorAction SilentlyContinue | Where-Object { $_.Name -match 'node' })",
+      "PowerShell(Write-Output $env:PATH; Write-Output \"---\"; Get-ChildItem \"$env:LOCALAPPDATA\\\\Programs\" -Directory -ErrorAction SilentlyContinue | Select-Object Name; Write-Output \"---volta/fnm---\"; Get-Command volta,fnm -ErrorAction SilentlyContinue)",
+      "Bash(gh auth *)",
+      "mcp__claude-in-chrome__tabs_create_mcp",
+      "mcp__claude-in-chrome__tabs_context_mcp"
     ]
   }
 }
