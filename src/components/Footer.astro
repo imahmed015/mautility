@@ -1,0 +1,63 @@
+---
+import { SITE, FOOTER_PAGES, COMPLIANCE_LINKS } from '../data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-navy text-white">
+  <div class="container-page grid gap-10 py-14 sm:py-16 md:grid-cols-4">
+    <div class="md:col-span-2">
+      <a href="/" class="flex items-baseline gap-1 text-xl font-extrabold leading-none" aria-label="MA Utility Solutions — home">
+        <span class="text-amber">MA</span>
+        <span class="font-semibold text-white">Utility Solutions</span>
+      </a>
+      <p class="mt-4 max-w-md text-sm leading-relaxed text-white/70">
+        An independent, whole-of-market UK brokerage helping homeowners and businesses secure better deals on
+        energy, water, solar and trusted trades — with no obligation-free instant quotes, because we do this
+        properly: with a real conversation and a Letter of Authority first.
+      </p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold uppercase tracking-wide text-amber">Pages</h2>
+      <ul class="mt-4 space-y-2.5">
+        {
+          FOOTER_PAGES.map((item) => (
+            <li>
+              <a href={item.href} class="text-sm text-white/75 transition hover:text-white">
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-bold uppercase tracking-wide text-amber">Contact</h2>
+      <ul class="mt-4 space-y-2.5 text-sm text-white/75">
+        <li>
+          <a href={`mailto:${SITE.email}`} class="transition hover:text-white">{SITE.email}</a>
+        </li>
+        <li>
+          <a href={SITE.url} class="transition hover:text-white">{SITE.url.replace('https://', '')}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-white/10">
+    <div class="container-page flex flex-col-reverse items-center gap-4 py-6 sm:flex-row sm:justify-between">
+      <p class="text-xs text-white/60">&copy; {year} {SITE.name}. All rights reserved.</p>
+      <div class="flex flex-wrap items-center justify-center gap-2.5">
+        {
+          COMPLIANCE_LINKS.map((item) => (
+            <a href={item.href} class="btn-pill-sm">
+              {item.label}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</footer>

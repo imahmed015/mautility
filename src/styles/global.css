@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-surface text-ink font-sans antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-bold text-navy tracking-tight;
+  }
+
+  /* Consistent, visible focus states for keyboard users (accessibility). */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid #f59e0b;
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background-color: #f59e0b;
+    color: #0a1f44;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-content px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-padding {
+    @apply py-14 sm:py-20 lg:py-24;
+  }
+
+  /* Primary CTA — amber background with NAVY text (not white) to meet WCAG AA
+     contrast: white-on-amber measures ~2.1:1 and fails; navy-on-amber measures ~7.5:1. */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-amber
+      px-6 py-3 text-sm font-bold text-navy shadow-card transition
+      hover:bg-amber-dark hover:shadow-card-hover active:translate-y-px
+      disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border-2 border-navy
+      bg-transparent px-6 py-3 text-sm font-bold text-navy transition
+      hover:bg-navy hover:text-white
+      disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  /* For use on dark/navy backgrounds — white outline, white text. */
+  .btn-outline-light {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border-2 border-white
+      bg-transparent px-6 py-3 text-sm font-bold text-white transition
+      hover:bg-white hover:text-navy
+      disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  /* Small pill-style buttons for footer compliance links. */
+  .btn-pill-sm {
+    @apply inline-flex items-center justify-center rounded-full bg-amber
+      px-4 py-2 text-xs font-semibold text-navy transition hover:bg-amber-dark;
+  }
+
+  .card {
+    @apply rounded-2xl bg-white p-6 shadow-card ring-1 ring-navy/5 sm:p-8;
+  }
+
+  .chip {
+    @apply inline-flex items-center rounded-full bg-navy/5 px-4 py-2 text-sm font-medium text-navy ring-1 ring-navy/10;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center rounded-full bg-amber/15 px-3 py-1 text-xs font-bold uppercase tracking-wide text-amber-dark;
+  }
+
+  .field-label {
+    @apply mb-1.5 block text-sm font-semibold text-navy;
+  }
+
+  .field-input {
+    @apply block w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-ink
+      placeholder:text-ink-light/70 focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/40;
+  }
+
+  .field-input-error {
+    @apply border-red-500 focus:border-red-500 focus:ring-red-200;
+  }
+
+  .field-error {
+    @apply mt-1.5 text-sm font-medium text-red-600;
+  }
+}

@@ -1,0 +1,118 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CTABanner from '../components/CTABanner.astro';
+
+const utilities = [
+  {
+    title: 'Electricity',
+    audience: 'Homeowners & businesses',
+    description: 'Whole-of-market comparisons for domestic and commercial electricity, with contract terms explained in plain English.',
+  },
+  {
+    title: 'Gas',
+    audience: 'Homeowners & businesses',
+    description: 'The same rigorous comparison approach for gas contracts, including dual-fuel arrangements where useful.',
+  },
+  {
+    title: 'Water',
+    audience: 'Business customers only',
+    description: 'We help business customers compare retailers and manage their water accounts. UK law does not allow households to switch water suppliers, so this service is for businesses only.',
+    highlight: true,
+  },
+  {
+    title: 'Multi-site management',
+    audience: 'Businesses with multiple locations',
+    description: 'One point of contact for energy and water across every site, with renewal dates tracked centrally so nothing slips through.',
+  },
+];
+
+const brokerReasons = [
+  {
+    title: 'Saves you time',
+    description: 'We handle the comparisons, the paperwork and the supplier conversations, so you get your time back.',
+  },
+  {
+    title: 'Avoids auto-renewal traps',
+    description: 'We track your renewal windows and act before you get rolled onto an expensive out-of-contract rate.',
+  },
+  {
+    title: 'Whole of market',
+    description: "We compare across the market rather than a limited panel, so you see options you'd otherwise miss.",
+  },
+  {
+    title: 'Ongoing support',
+    description: "Our relationship doesn't end at the switch — we stay on hand for questions, renewals and future reviews.",
+  },
+];
+---
+
+<Layout
+  title="Electricity, Gas & Business Water Brokerage"
+  description="Whole-of-market electricity and gas comparisons for homes and businesses, plus business water switching and multi-site utility management. Book a free consultation."
+>
+  <section class="bg-navy">
+    <div class="container-page section-padding text-center">
+      <span class="eyebrow">Utilities</span>
+      <h1 class="mx-auto mt-5 max-w-3xl text-4xl font-extrabold text-white sm:text-5xl">
+        Electricity, gas and business water — sorted properly
+      </h1>
+      <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/75">
+        Whole-of-market comparisons and ongoing contract management, so you're never the last to know your renewal
+        is coming up.
+      </p>
+      <div class="mt-9">
+        <a href="/contact" class="btn-primary px-8 py-3.5 text-base">Book a Free Consultation</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-padding">
+    <div class="container-page">
+      <div class="grid gap-6 sm:grid-cols-2">
+        {
+          utilities.map((item) => (
+            <div class:list={['card', item.highlight && 'ring-2 ring-amber/50']}>
+              <div class="flex items-center justify-between gap-3">
+                <h2 class="text-xl font-bold text-navy">{item.title}</h2>
+                <span class="chip whitespace-nowrap text-xs">{item.audience}</span>
+              </div>
+              <p class="mt-3 text-sm leading-relaxed text-ink-light">{item.description}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="mt-6 rounded-xl border border-amber/40 bg-amber/10 p-5 text-sm leading-relaxed text-navy">
+        <strong class="font-bold">Please note:</strong> under UK law, household customers cannot switch their water
+        supplier — water retail competition applies to business customers only. Our water service is therefore
+        available to businesses, not private households.
+      </div>
+    </div>
+  </section>
+
+  <section class="section-padding bg-white">
+    <div class="container-page">
+      <div class="mx-auto max-w-2xl text-center">
+        <span class="eyebrow">Why use a broker</span>
+        <h2 class="mt-4 text-3xl font-extrabold sm:text-4xl">What we actually add</h2>
+      </div>
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          brokerReasons.map((reason) => (
+            <div class="text-center">
+              <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-amber/15 text-amber-dark">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h3 class="mt-4 text-base font-bold text-navy">{reason.title}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-ink-light">{reason.description}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CTABanner />
+</Layout>

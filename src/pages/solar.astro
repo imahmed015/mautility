@@ -1,0 +1,123 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CTABanner from '../components/CTABanner.astro';
+
+const helpItems = [
+  {
+    title: 'Installation',
+    description: 'We connect you with vetted installers and help you compare proposals — panel specification, positioning, and workmanship warranties included.',
+  },
+  {
+    title: 'Financing',
+    description: "We talk you through the financing routes available so you can weigh upfront purchase against spreading the cost, with the numbers explained clearly.",
+  },
+  {
+    title: 'Battery storage',
+    description: 'Battery storage can significantly change your payback timeline. We help you understand whether it makes sense for your usage pattern.',
+  },
+  {
+    title: 'ROI guidance',
+    description: 'Solar is a long-term investment. We help you understand realistic payback periods and returns before you commit to anything.',
+  },
+];
+
+const whyItems = [
+  {
+    title: 'Lower energy bills',
+    description: 'Generating your own electricity reduces how much you need to buy from the grid, especially as usage shifts toward daytime consumption.',
+  },
+  {
+    title: 'Protection from price rises',
+    description: 'Once installed, a meaningful share of your electricity is no longer exposed to wholesale price volatility.',
+  },
+  {
+    title: 'Increased property value',
+    description: 'A well-installed system with clear documentation can be an attractive feature for future buyers or tenants.',
+  },
+  {
+    title: 'Lower carbon footprint',
+    description: 'Reducing reliance on grid electricity generated from fossil fuels is one of the more tangible steps a home or business can take.',
+  },
+];
+---
+
+<Layout
+  title="Solar Installation, Financing & Battery Storage"
+  description="Independent guidance on solar installation, financing options, battery storage and realistic ROI — for homeowners and businesses across the UK. Book a free consultation."
+>
+  <section class="bg-navy">
+    <div class="container-page section-padding text-center">
+      <span class="eyebrow">Solar</span>
+      <h1 class="mx-auto mt-5 max-w-3xl text-4xl font-extrabold text-white sm:text-5xl">
+        Solar advice without the sales pressure
+      </h1>
+      <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/75">
+        Installation, financing and battery storage — explained honestly, with realistic numbers, before you commit
+        to anything.
+      </p>
+      <div class="mt-9">
+        <a href="/contact" class="btn-primary px-8 py-3.5 text-base">Book a Free Consultation</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-padding">
+    <div class="container-page">
+      <div class="mx-auto max-w-2xl text-center">
+        <span class="eyebrow">What we help with</span>
+        <h2 class="mt-4 text-3xl font-extrabold sm:text-4xl">From first question to switched on</h2>
+      </div>
+      <div class="mt-12 grid gap-6 sm:grid-cols-2">
+        {
+          helpItems.map((item) => (
+            <div class="card">
+              <h3 class="text-lg font-bold text-navy">{item.title}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-ink-light">{item.description}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section-padding bg-white">
+    <div class="container-page">
+      <div class="mx-auto max-w-2xl text-center">
+        <span class="eyebrow">Why go solar</span>
+        <h2 class="mt-4 text-3xl font-extrabold sm:text-4xl">What a good system can do for you</h2>
+      </div>
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          whyItems.map((item) => (
+            <div class="text-center">
+              <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-amber/15 text-amber-dark">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.36 6.36l-.7-.7M6.34 6.34l-.7-.7m12.72 0l-.7.7M6.34 17.66l-.7.7M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+              </div>
+              <h3 class="mt-4 text-base font-bold text-navy">{item.title}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-ink-light">{item.description}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section-padding">
+    <div class="container-page">
+      <div class="card mx-auto max-w-3xl text-center">
+        <h2 class="text-2xl font-extrabold text-navy">Not sure if solar is right for your property yet?</h2>
+        <p class="mt-3 text-sm leading-relaxed text-ink-light sm:text-base">
+          That's exactly what the first conversation is for. We'll ask about your roof, usage and budget before
+          pointing you anywhere — no pressure, no obligation.
+        </p>
+        <div class="mt-6">
+          <a href="/contact" class="btn-secondary">Book a Free Consultation</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CTABanner />
+</Layout>

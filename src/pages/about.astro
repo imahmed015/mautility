@@ -1,0 +1,120 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CTABanner from '../components/CTABanner.astro';
+
+const stats = [
+  { label: 'Accounts personally managed', value: '300+' },
+  { label: "Hands-on industry experience", value: '1+ year' },
+  { label: 'Market coverage', value: '100%' },
+];
+
+const values = [
+  {
+    title: 'Whole-of-market, always',
+    description: "We are not restricted to a panel of preferred suppliers. If it's not competitive, we won't recommend it.",
+  },
+  {
+    title: 'No instant, guessed pricing',
+    description: "Every recommendation is based on your real contract and usage — not a generic online estimate.",
+  },
+  {
+    title: 'We watch renewal dates',
+    description: "Auto-renewal is one of the most common ways businesses and homeowners lose money. We track it so you don't have to.",
+  },
+];
+---
+
+<Layout
+  title="About Us"
+  description="MA Utility Solutions was founded on hands-on experience managing 300+ utility accounts. Read our founder's story and why we built an independent, whole-of-market brokerage."
+>
+  <section class="bg-navy">
+    <div class="container-page section-padding text-center">
+      <span class="eyebrow">About us</span>
+      <h1 class="mx-auto mt-5 max-w-3xl text-4xl font-extrabold text-white sm:text-5xl">
+        Built from experience, not a business plan
+      </h1>
+      <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/75">
+        We started MA Utility Solutions because we kept seeing the same thing: businesses and households quietly
+        losing money to contracts nobody was watching.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-padding">
+    <div class="container-page grid gap-12 lg:grid-cols-3">
+      <div class="lg:col-span-2">
+        <h2 class="text-2xl font-extrabold sm:text-3xl">Our founder's story</h2>
+        <div class="mt-6 space-y-5 text-base leading-relaxed text-ink-light">
+          <p>
+            Before starting this company, I spent over a year working inside a utility brokerage, personally
+            managing more than 300 client accounts — everything from small independent shops to multi-site
+            businesses and homeowners on standard tariffs.
+          </p>
+          <p>
+            That hands-on experience taught me exactly where people lose out. It's rarely one big mistake. It's the
+            contract that quietly rolls onto an out-of-contract rate because nobody flagged the renewal window. It's
+            the supplier who was competitive two years ago and has since fallen well behind the market, with no one
+            checking. It's the homeowner who assumes their supplier will tell them when a better deal is available
+            — they won't.
+          </p>
+          <p>
+            I also saw how a lot of brokers operate: chasing quick wins, pushing whoever pays the best commission,
+            and disappearing after the switch goes through. That's not what I wanted to build.
+          </p>
+          <p>
+            MA Utility Solutions exists to do this properly — whole-of-market comparisons, honest advice even when
+            that means telling someone to stay put, and ongoing management so contracts don't get forgotten again.
+            We don't do instant online quotes, because a number generated without knowing your actual contract and
+            usage isn't advice, it's a guess. Every client starts with a real conversation and a Letter of Authority,
+            so what we come back with is accurate and worth acting on.
+          </p>
+          <p>
+            We're a small, independent operation by design — no call centre, no scripts, just people who understand
+            the market and manage it properly on your behalf.
+          </p>
+        </div>
+      </div>
+
+      <aside class="lg:col-span-1">
+        <div class="card sticky top-24">
+          <h2 class="text-lg font-bold text-navy">By the numbers</h2>
+          <dl class="mt-6 space-y-6">
+            {
+              stats.map((stat) => (
+                <div>
+                  <dt class="text-sm font-medium text-ink-light">{stat.label}</dt>
+                  <dd class="mt-1 text-3xl font-extrabold text-amber-dark">{stat.value}</dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section-padding bg-white">
+    <div class="container-page">
+      <div class="mx-auto max-w-2xl text-center">
+        <span class="eyebrow">What we stand for</span>
+        <h2 class="mt-4 text-3xl font-extrabold sm:text-4xl">The principles behind every recommendation</h2>
+      </div>
+      <div class="mt-12 grid gap-6 sm:grid-cols-3">
+        {
+          values.map((value) => (
+            <div class="card">
+              <h3 class="text-lg font-bold text-navy">{value.title}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-ink-light">{value.description}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CTABanner
+    heading="Want to know if we can help?"
+    subheading="Book a free consultation and we'll give you a straight answer — even if that answer is 'stay where you are'."
+  />
+</Layout>

@@ -1,0 +1,236 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CTABanner from '../components/CTABanner.astro';
+import FAQAccordion from '../components/FAQAccordion';
+
+const services = [
+  {
+    name: 'Solar',
+    href: '/solar',
+    description: 'Installation, financing and battery storage guidance to lower bills and protect against rising prices.',
+    icon: 'M12 3v2m0 14v2m9-9h-2M5 12H3m15.36 6.36l-1.42-1.42M7.06 7.06 5.64 5.64m12.72 0-1.42 1.42M7.06 16.94l-1.42 1.42M12 8a4 4 0 100 8 4 4 0 000-8z',
+  },
+  {
+    name: 'Utilities',
+    href: '/utilities',
+    description: 'Electricity, gas and business water — whole-of-market comparisons with ongoing contract management.',
+    icon: 'M13 10V3L4 14h7v7l9-11h-7z',
+  },
+  {
+    name: 'Fixtures',
+    href: '/fixtures',
+    description: 'Vetted trades and contractors for fit-outs, renovations, repairs and compliance work — one point of contact.',
+    icon: 'M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17L4.5 20.25m10.98-14.15l-2.496 3.03m0 0a2.5 2.5 0 00-1.208.766l-5.877 5.877a2.652 2.652 0 103.75 3.75l5.877-5.877c.14-.469.382-.891.766-1.208m0 0l3.03-2.496M13.5 6.75l3.03-2.496',
+  },
+];
+
+const steps = [
+  {
+    title: 'Book a Call',
+    description: 'Tell us about your energy, water, solar or trades needs. No pressure, no obligation.',
+  },
+  {
+    title: 'We Get to Work',
+    description: 'With your Letter of Authority, we compare the whole market and negotiate on your behalf.',
+  },
+  {
+    title: 'You Save',
+    description: 'We present clear options, handle the switch, and stay on hand for ongoing support.',
+  },
+];
+
+const trustPoints = [
+  {
+    title: 'Whole-of-market comparison',
+    description: 'We are not tied to any single supplier, so recommendations are based on what suits you — not a target.',
+  },
+  {
+    title: 'No instant, meaningless quotes',
+    description: "We won't guess at a number before understanding your usage and contract position properly.",
+  },
+  {
+    title: 'Ongoing account management',
+    description: "We track renewal dates so you don't get caught out by auto-renewals or out-of-contract rates.",
+  },
+  {
+    title: 'Straight-talking, no jargon',
+    description: 'Clear explanations of your options, in plain English, from someone who has managed hundreds of accounts.',
+  },
+];
+
+const faqs = [
+  {
+    question: 'Why can\'t you just give me a quote online?',
+    answer:
+      "Because it wouldn't be accurate or honest. Energy, water and solar pricing depends on your usage, location, contract terms and supplier appetite on the day — a generic online number is essentially a guess. We start with a short call and a Letter of Authority (LOA), which lets us pull your real contract details and get genuine, comparable pricing from the whole market.",
+  },
+  {
+    question: 'What is a Letter of Authority (LOA)?',
+    answer:
+      'An LOA is a simple, standard document that authorises us to speak to your current supplier(s) on your behalf and access your account details. It does not commit you to switching anything — it just allows us to do the groundwork properly.',
+  },
+  {
+    question: 'Is there any obligation to switch after speaking to you?',
+    answer:
+      'None at all. We will lay out your options honestly, including where staying put is the right call. You only proceed if it makes sense for you.',
+  },
+  {
+    question: 'Do you work with homeowners and businesses?',
+    answer:
+      'Yes. We support homeowners on energy and solar, and businesses/SMEs on energy, business water, solar and fixtures/trades sourcing. Note that UK households cannot switch water suppliers by law — our water service is for business customers only.',
+  },
+  {
+    question: 'How do you get paid?',
+    answer:
+      'We are typically paid a commission by the supplier or contractor once a deal completes — this does not add to what you pay, and we will always be transparent about it during your consultation.',
+  },
+];
+---
+
+<Layout
+  title="Independent UK Energy, Water, Solar & Trades Brokerage"
+  description="MA Utility Solutions is an independent, whole-of-market UK brokerage helping homeowners and businesses secure better deals on energy, water, solar and trusted trades. Book a free consultation."
+>
+  <!-- Hero -->
+  <section class="relative overflow-hidden bg-navy">
+    <div
+      class="pointer-events-none absolute inset-0 opacity-20"
+      style="background-image: radial-gradient(circle at 20% 20%, #F59E0B 0, transparent 40%), radial-gradient(circle at 85% 60%, #F59E0B 0, transparent 35%);"
+      aria-hidden="true"
+    >
+    </div>
+    <div class="container-page relative grid gap-12 py-20 sm:py-24 lg:grid-cols-2 lg:items-center lg:py-28">
+      <div>
+        <span class="eyebrow">Independent &amp; whole-of-market</span>
+        <h1 class="mt-5 text-4xl font-extrabold leading-tight text-white sm:text-5xl">
+          Smarter deals on energy, water, solar and trades — without the sales pitch.
+        </h1>
+        <p class="mt-6 max-w-xl text-lg leading-relaxed text-white/75">
+          We compare the whole market on your behalf and manage the switch end-to-end. No instant quotes, no
+          auto-renewal traps — just a proper conversation and a plan that works for you.
+        </p>
+        <div class="mt-9 flex flex-wrap gap-4">
+          <a href="/contact" class="btn-primary px-8 py-3.5 text-base">Book a Free Consultation</a>
+          <a href="/about" class="btn-outline-light">Learn about us</a>
+        </div>
+      </div>
+
+      <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-8 backdrop-blur">
+        <dl class="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-2">
+          <div>
+            <dt class="text-sm font-medium text-white/60">Accounts managed</dt>
+            <dd class="mt-1 text-3xl font-extrabold text-amber">300+</dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-white/60">Market coverage</dt>
+            <dd class="mt-1 text-3xl font-extrabold text-amber">100%</dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-white/60">Services</dt>
+            <dd class="mt-1 text-3xl font-extrabold text-amber">4</dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-white/60">Obligation to switch</dt>
+            <dd class="mt-1 text-3xl font-extrabold text-amber">None</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services overview -->
+  <section class="section-padding">
+    <div class="container-page">
+      <div class="mx-auto max-w-2xl text-center">
+        <span class="eyebrow">What we help with</span>
+        <h2 class="mt-4 text-3xl font-extrabold sm:text-4xl">Three ways we save you time and money</h2>
+      </div>
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          services.map((service) => (
+            <a href={service.href} class="card group flex flex-col transition hover:shadow-card-hover">
+              <span class="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-amber/15 text-amber-dark">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d={service.icon} />
+                </svg>
+              </span>
+              <h3 class="mt-5 text-xl font-bold text-navy">{service.name}</h3>
+              <p class="mt-2 flex-1 text-sm leading-relaxed text-ink-light">{service.description}</p>
+              <span class="mt-5 inline-flex items-center gap-1 text-sm font-bold text-amber-dark group-hover:gap-2 transition-all">
+                Learn more
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="section-padding bg-white">
+    <div class="container-page">
+      <div class="mx-auto max-w-2xl text-center">
+        <span class="eyebrow">How it works</span>
+        <h2 class="mt-4 text-3xl font-extrabold sm:text-4xl">Three simple steps</h2>
+      </div>
+      <div class="mt-12 grid gap-8 sm:grid-cols-3">
+        {
+          steps.map((step, index) => (
+            <div class="relative text-center">
+              <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-navy text-xl font-extrabold text-amber">
+                {index + 1}
+              </div>
+              <h3 class="mt-5 text-lg font-bold text-navy">{step.title}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-ink-light">{step.description}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Why choose us -->
+  <section class="section-padding">
+    <div class="container-page">
+      <div class="mx-auto max-w-2xl text-center">
+        <span class="eyebrow">Why choose us</span>
+        <h2 class="mt-4 text-3xl font-extrabold sm:text-4xl">Built around trust, not targets</h2>
+      </div>
+      <div class="mt-12 grid gap-6 sm:grid-cols-2">
+        {
+          trustPoints.map((point) => (
+            <div class="card flex gap-4">
+              <span class="mt-1 inline-flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-amber/15 text-amber-dark">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              </span>
+              <div>
+                <h3 class="text-base font-bold text-navy">{point.title}</h3>
+                <p class="mt-1.5 text-sm leading-relaxed text-ink-light">{point.description}</p>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section-padding bg-white">
+    <div class="container-page">
+      <div class="mx-auto max-w-2xl text-center">
+        <span class="eyebrow">FAQ</span>
+        <h2 class="mt-4 text-3xl font-extrabold sm:text-4xl">Common questions</h2>
+      </div>
+      <div class="mx-auto mt-12 max-w-3xl">
+        <FAQAccordion client:visible items={faqs} />
+      </div>
+    </div>
+  </section>
+
+  <CTABanner />
+</Layout>

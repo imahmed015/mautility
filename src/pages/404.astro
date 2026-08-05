@@ -1,0 +1,19 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Page Not Found" description="Sorry, we couldn't find that page. Head back to the MA Utility Solutions homepage." noindex>
+  <section class="bg-navy">
+    <div class="container-page flex flex-col items-center justify-center py-24 text-center sm:py-32">
+      <p class="text-8xl font-extrabold text-amber sm:text-9xl">404</p>
+      <h1 class="mt-6 text-3xl font-extrabold text-white sm:text-4xl">We couldn't find that page</h1>
+      <p class="mx-auto mt-4 max-w-md text-base leading-relaxed text-white/70">
+        The page you're looking for may have moved or no longer exists. Let's get you back on track.
+      </p>
+      <div class="mt-9 flex flex-wrap justify-center gap-4">
+        <a href="/" class="btn-primary px-8 py-3.5 text-base">Back to Homepage</a>
+        <a href="/contact" class="btn-outline-light">Contact us</a>
+      </div>
+    </div>
+  </section>
+</Layout>

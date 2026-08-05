@@ -1,0 +1,26 @@
+---
+// Placeholder for the ADR (Alternative Dispute Resolution) accreditation badge —
+// e.g. The Dispute Resolution Ombudsman — once membership is confirmed.
+//
+// This component is intentionally inert until then: set ENABLED to true and fill in
+// the badge image + accreditation URL to switch it on across every page that renders
+// <AdrBadge /> (currently only /complaints). No other files need to change.
+const ENABLED = false;
+const badgeName = 'The Dispute Resolution Ombudsman';
+const badgeHref = '#'; // e.g. accreditation verification URL once membership is live
+const badgeImageSrc = ''; // e.g. '/adr-badge.svg' once the artwork is supplied
+---
+
+{
+  ENABLED && (
+    <div class="mt-6 flex items-center gap-3 rounded-xl border border-navy/10 bg-white p-4">
+      {badgeImageSrc && <img src={badgeImageSrc} alt={`${badgeName} accreditation badge`} class="h-14 w-auto" />}
+      <div>
+        <p class="text-sm font-semibold text-navy">Accredited member</p>
+        <a href={badgeHref} class="text-sm text-ink-light underline hover:text-amber-dark" target="_blank" rel="noopener noreferrer">
+          {badgeName}
+        </a>
+      </div>
+    </div>
+  )
+}

@@ -1,0 +1,28 @@
+---
+import Layout from '../layouts/Layout.astro';
+import FeedbackForm from '../components/FeedbackForm';
+---
+
+<Layout
+  title="Share Your Feedback"
+  description="Share private feedback on your experience with MA Utility Solutions. Feedback is confidential and only published as a testimonial with your explicit, opted-in consent."
+>
+  <section class="bg-navy">
+    <div class="container-page section-padding text-center">
+      <span class="eyebrow">Feedback</span>
+      <h1 class="mx-auto mt-5 max-w-2xl text-4xl font-extrabold text-white sm:text-5xl">Tell us how we did</h1>
+      <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/75">
+        This is a private feedback form, not a public comment wall. We read every response, and nothing is ever
+        published without your explicit, separate consent.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-padding">
+    <div class="container-page">
+      <div class="card mx-auto max-w-2xl">
+        <FeedbackForm client:load />
+      </div>
+    </div>
+  </section>
+</Layout>

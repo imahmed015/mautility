@@ -1,0 +1,116 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CTABanner from '../components/CTABanner.astro';
+import { TRADES } from '../data/site';
+
+const projectTypes = [
+  'Fit-outs',
+  'Retail renovations',
+  'Extensions',
+  'Repairs',
+  'New builds',
+  'Compliance work',
+];
+
+const managementSteps = [
+  {
+    title: 'Comparable quotes',
+    description: 'We brief contractors consistently so the quotes you receive back are actually comparing like-for-like.',
+  },
+  {
+    title: 'Vetted contractors',
+    description: "We only put forward trades we're confident in — checked for the right experience and track record.",
+  },
+  {
+    title: 'Scheduling',
+    description: 'We help coordinate timings across trades so your project moves forward without unnecessary gaps.',
+  },
+  {
+    title: 'One point of contact',
+    description: "You deal with us, not a dozen different contractors — we chase, follow up and keep things moving.",
+  },
+];
+---
+
+<Layout
+  title="Trades & Fixtures Sourcing for Fit-Outs and Renovations"
+  description="We source and manage vetted trades — carpenters, plumbers, electricians and more — for fit-outs, renovations, repairs and new builds. Comparable quotes, one point of contact."
+>
+  <section class="bg-navy">
+    <div class="container-page section-padding text-center">
+      <span class="eyebrow">Fixtures</span>
+      <h1 class="mx-auto mt-5 max-w-3xl text-4xl font-extrabold text-white sm:text-5xl">
+        The right trades, without the chasing
+      </h1>
+      <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/75">
+        We source and manage vetted contractors for your project, so you get comparable quotes and one point of
+        contact from start to finish.
+      </p>
+      <div class="mt-9">
+        <a href="/contact" class="btn-primary px-8 py-3.5 text-base">Book a Free Consultation</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-padding">
+    <div class="container-page">
+      <div class="mx-auto max-w-2xl text-center">
+        <span class="eyebrow">Trades covered</span>
+        <h2 class="mt-4 text-3xl font-extrabold sm:text-4xl">Who we can source for you</h2>
+      </div>
+      <div class="mt-10 flex flex-wrap justify-center gap-3">
+        {TRADES.map((trade) => <span class="chip">{trade}</span>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section-padding bg-white">
+    <div class="container-page">
+      <div class="mx-auto max-w-2xl text-center">
+        <span class="eyebrow">Types of projects</span>
+        <h2 class="mt-4 text-3xl font-extrabold sm:text-4xl">What we support</h2>
+      </div>
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          projectTypes.map((type) => (
+            <div class="card flex items-center gap-3">
+              <span class="inline-flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-amber/15 text-amber-dark">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              </span>
+              <span class="font-semibold text-navy">{type}</span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section-padding">
+    <div class="container-page">
+      <div class="mx-auto max-w-2xl text-center">
+        <span class="eyebrow">How we manage it</span>
+        <h2 class="mt-4 text-3xl font-extrabold sm:text-4xl">From brief to completion</h2>
+      </div>
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          managementSteps.map((step, index) => (
+            <div class="text-center">
+              <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-navy text-lg font-extrabold text-amber">
+                {index + 1}
+              </div>
+              <h3 class="mt-4 text-base font-bold text-navy">{step.title}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-ink-light">{step.description}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CTABanner
+    heading="Got a project in mind?"
+    subheading="Tell us what you're planning and we'll help you get comparable quotes from trades we trust."
+  />
+</Layout>
