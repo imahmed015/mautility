@@ -4,10 +4,10 @@
 export const SITE = {
   name: 'MA Utility Solutions',
   url: 'https://mautilitysolutions.co.uk',
-  email: 'hello@mautilitysolutions.co.uk',
-  complaintsEmail: 'complaints@mautilitysolutions.co.uk',
-  phone: '+44 1234 567890',
-  phoneHref: 'tel:+441234567890',
+  email: 'admin@mautilitysolutions.co.uk',
+  complaintsEmail: 'admin@mautilitysolutions.co.uk', // no separate complaints mailbox exists yet — same inbox
+  phone: '07312 176843',
+  phoneHref: 'tel:+447312176843',
   tagline: 'Independent whole-of-market brokerage for energy, water, solar and trades.',
 };
 

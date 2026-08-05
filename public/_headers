@@ -1,8 +1,18 @@
 # Cloudflare Pages custom headers — applied to every response.
 # https://developers.cloudflare.com/pages/configuration/headers/
+#
+# Content-Security-Policy notes:
+# - style-src needs 'unsafe-inline' for one inline style= attribute on the homepage
+#   hero (src/pages/index.astro). script-src has NO 'unsafe-inline' — all JS ships
+#   as same-origin bundled files (verified against the real Astro build output),
+#   none of it inline.
+# - TODO: once Cloudflare Turnstile is added (see ContactForm.tsx / FeedbackForm.tsx),
+#   this CSP will need: script-src https://challenges.cloudflare.com;
+#   frame-src https://challenges.cloudflare.com; connect-src https://challenges.cloudflare.com
 
 /*
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: geolocation=(), camera=(), microphone=()
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://api.web3forms.com; form-action 'self' https://api.web3forms.com; base-uri 'self'; object-src 'none'; frame-ancestors 'none'
