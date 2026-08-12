@@ -3,7 +3,14 @@ import Layout from '../layouts/Layout.astro';
 import CTABanner from '../components/CTABanner.astro';
 import Icon, { type IconName } from '../components/Icon.astro';
 
-const utilities = [
+const utilities: {
+  title: string;
+  audience: string;
+  description: string;
+  highlight?: boolean;
+  image?: string;
+  imageAlt?: string;
+}[] = [
   {
     title: 'Electricity',
     audience: 'Homeowners & businesses',
@@ -13,6 +20,8 @@ const utilities = [
     title: 'Gas',
     audience: 'Homeowners & businesses',
     description: 'The same rigorous comparison approach for gas contracts, including dual-fuel arrangements where useful.',
+    image: '/utilities-secondary.jpg',
+    imageAlt: 'Row of gas meters mounted on a building’s exterior wall',
   },
   {
     title: 'Water',
@@ -55,8 +64,15 @@ const brokerReasons: { title: string; description: string; icon: IconName }[] = 
   title="Electricity, Gas & Business Water Brokerage"
   description="Whole-of-market electricity and gas comparisons for homes and businesses, plus business water switching and multi-site utility management. Book a free consultation."
 >
-  <section class="bg-navy">
-    <div class="container-page section-padding text-center">
+  <section class="relative overflow-hidden bg-navy">
+    <img
+      src="/utilities-hero.jpg"
+      alt="High-voltage electricity transmission pylons and power lines at dusk"
+      class="absolute inset-0 h-full w-full object-cover"
+      loading="lazy"
+    />
+    <div class="absolute inset-0 bg-navy/75" aria-hidden="true"></div>
+    <div class="container-page section-padding relative text-center">
       <span class="eyebrow">Utilities</span>
       <h1 class="mx-auto mt-5 max-w-3xl text-4xl font-extrabold text-white sm:text-5xl">
         Electricity, gas and business water — sorted properly
@@ -73,10 +89,18 @@ const brokerReasons: { title: string; description: string; icon: IconName }[] = 
 
   <section class="section-padding">
     <div class="container-page">
-      <div class="grid gap-6 sm:grid-cols-2">
+      <div class="grid items-start gap-6 sm:grid-cols-2">
         {
           utilities.map((item) => (
             <div class:list={['card', item.highlight && 'ring-2 ring-amber/50']}>
+              {item.image && (
+                <img
+                  src={item.image}
+                  alt={item.imageAlt}
+                  class="mb-5 h-40 w-full rounded-xl object-cover sm:h-48"
+                  loading="lazy"
+                />
+              )}
               <div class="flex items-center justify-between gap-3">
                 <h2 class="text-xl font-bold text-navy">{item.title}</h2>
                 <span class="chip whitespace-nowrap text-xs">{item.audience}</span>
