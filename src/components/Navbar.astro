@@ -1,11 +1,21 @@
 ---
-import { PRIMARY_NAV } from '../data/site';
+import { PRIMARY_NAV, type NavLink } from '../data/site';
+import Icon from './Icon.astro';
 
 const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 
 function isActive(href: string) {
   const normalized = href.replace(/\/$/, '') || '/';
   return normalized === currentPath;
+}
+
+function isParentActive(children: NavLink[]) {
+  return children.some((child) => isActive(child.href));
+}
+
+// Turns a nav label into a stable id fragment, e.g. "Services" -> "services".
+function slug(label: string) {
+  return label.toLowerCase().replace(/\s+/g, '-');
 }
 ---
 
@@ -19,20 +29,61 @@ function isActive(href: string) {
     <div class="hidden items-center gap-8 md:flex">
       <ul class="flex items-center gap-7">
         {
-          PRIMARY_NAV.map((item) => (
-            <li>
-              <a
-                href={item.href}
-                class:list={[
-                  'text-sm font-medium transition hover:text-amber-dark',
-                  isActive(item.href) ? 'text-navy font-bold' : 'text-ink',
-                ]}
-                aria-current={isActive(item.href) ? 'page' : undefined}
-              >
-                {item.label}
-              </a>
-            </li>
-          ))
+          PRIMARY_NAV.map((item) =>
+            'children' in item ? (
+              <li class="relative">
+                <button
+                  type="button"
+                  class:list={[
+                    'flex items-center gap-1 text-sm font-medium transition hover:text-amber-dark',
+                    isParentActive(item.children) ? 'text-navy font-bold' : 'text-ink',
+                  ]}
+                  aria-expanded="false"
+                  aria-haspopup="true"
+                  aria-controls={`${slug(item.label)}-dropdown-desktop`}
+                  data-dropdown-trigger
+                >
+                  {item.label}
+                  <Icon name="chevron-down" class="h-4 w-4 transition-transform" data-dropdown-chevron />
+                </button>
+                <ul
+                  id={`${slug(item.label)}-dropdown-desktop`}
+                  role="menu"
+                  class="absolute left-0 top-full z-10 mt-2 hidden w-48 rounded-xl bg-white p-2 shadow-card-hover ring-1 ring-navy/10"
+                  data-dropdown-panel
+                >
+                  {item.children.map((child) => (
+                    <li role="none">
+                      <a
+                        role="menuitem"
+                        href={child.href}
+                        class:list={[
+                          'block rounded-lg px-3 py-2 text-sm font-medium transition hover:bg-navy/5',
+                          isActive(child.href) ? 'text-navy font-bold' : 'text-ink',
+                        ]}
+                        aria-current={isActive(child.href) ? 'page' : undefined}
+                      >
+                        {child.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ) : (
+              <li>
+                <a
+                  href={item.href}
+                  class:list={[
+                    'text-sm font-medium transition hover:text-amber-dark',
+                    isActive(item.href) ? 'text-navy font-bold' : 'text-ink',
+                  ]}
+                  aria-current={isActive(item.href) ? 'page' : undefined}
+                >
+                  {item.label}
+                </a>
+              </li>
+            )
+          )
         }
       </ul>
       <a href="/contact" class="btn-primary">Get in Touch</a>
@@ -58,20 +109,54 @@ function isActive(href: string) {
   <div id="mobile-menu" class="hidden border-t border-navy/10 bg-surface md:hidden">
     <ul class="container-page flex flex-col gap-1 py-4">
       {
-        PRIMARY_NAV.map((item) => (
-          <li>
-            <a
-              href={item.href}
-              class:list={[
-                'block rounded-lg px-3 py-2.5 text-base font-medium transition hover:bg-navy/5',
-                isActive(item.href) ? 'text-navy font-bold' : 'text-ink',
-              ]}
-              aria-current={isActive(item.href) ? 'page' : undefined}
-            >
-              {item.label}
-            </a>
-          </li>
-        ))
+        PRIMARY_NAV.map((item) =>
+          'children' in item ? (
+            <li>
+              <button
+                type="button"
+                class:list={[
+                  'flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-base font-medium transition hover:bg-navy/5',
+                  isParentActive(item.children) ? 'text-navy font-bold' : 'text-ink',
+                ]}
+                aria-expanded="false"
+                aria-controls={`${slug(item.label)}-dropdown-mobile`}
+                data-accordion-trigger
+              >
+                {item.label}
+                <Icon name="chevron-down" class="h-4 w-4 transition-transform" data-accordion-chevron />
+              </button>
+              <ul id={`${slug(item.label)}-dropdown-mobile`} class="hidden flex-col gap-1 py-1 pl-4" data-accordion-panel>
+                {item.children.map((child) => (
+                  <li>
+                    <a
+                      href={child.href}
+                      class:list={[
+                        'block rounded-lg px-3 py-2 text-sm font-medium transition hover:bg-navy/5',
+                        isActive(child.href) ? 'text-navy font-bold' : 'text-ink',
+                      ]}
+                      aria-current={isActive(child.href) ? 'page' : undefined}
+                    >
+                      {child.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ) : (
+            <li>
+              <a
+                href={item.href}
+                class:list={[
+                  'block rounded-lg px-3 py-2.5 text-base font-medium transition hover:bg-navy/5',
+                  isActive(item.href) ? 'text-navy font-bold' : 'text-ink',
+                ]}
+                aria-current={isActive(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          )
+        )
       }
       <li class="pt-2">
         <a href="/contact" class="btn-primary w-full">Get in Touch</a>
@@ -86,6 +171,14 @@ function isActive(href: string) {
   const iconOpen = document.getElementById('icon-open');
   const iconClose = document.getElementById('icon-close');
 
+  function closeMobileMenu() {
+    menu?.classList.add('hidden');
+    iconOpen?.classList.remove('hidden');
+    iconClose?.classList.add('hidden');
+    button?.setAttribute('aria-expanded', 'false');
+    button?.setAttribute('aria-label', 'Open main menu');
+  }
+
   button?.addEventListener('click', () => {
     const isHidden = menu?.classList.contains('hidden');
     menu?.classList.toggle('hidden');
@@ -95,13 +188,73 @@ function isActive(href: string) {
     button.setAttribute('aria-label', isHidden ? 'Close main menu' : 'Open main menu');
   });
 
-  // Close the mobile menu automatically when a link is tapped.
+  // Close the mobile menu automatically when a link is tapped (including the
+  // "Services" sub-links inside the mobile accordion — they're <a> tags too).
   menu?.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', () => {
-      menu.classList.add('hidden');
-      iconOpen?.classList.remove('hidden');
-      iconClose?.classList.add('hidden');
-      button?.setAttribute('aria-expanded', 'false');
+    link.addEventListener('click', closeMobileMenu);
+  });
+
+  // --- Desktop "Services" dropdown ---
+  // Opens on click (not hover-only), so it works for keyboard and touch users, not
+  // just mouse hover. Enter/Space activate the trigger via native <button> behaviour;
+  // Escape and click-outside both close it, matching typical menu-button conventions.
+  document.querySelectorAll<HTMLButtonElement>('[data-dropdown-trigger]').forEach((trigger) => {
+    const panelId = trigger.getAttribute('aria-controls');
+    const panel = panelId ? document.getElementById(panelId) : null;
+    const chevron = trigger.querySelector('[data-dropdown-chevron]');
+    if (!panel) return;
+
+    const close = () => {
+      panel.classList.add('hidden');
+      trigger.setAttribute('aria-expanded', 'false');
+      chevron?.classList.remove('rotate-180');
+    };
+
+    const open = () => {
+      panel.classList.remove('hidden');
+      trigger.setAttribute('aria-expanded', 'true');
+      chevron?.classList.add('rotate-180');
+    };
+
+    trigger.addEventListener('click', () => {
+      trigger.getAttribute('aria-expanded') === 'true' ? close() : open();
+    });
+
+    trigger.addEventListener('keydown', (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        close();
+        trigger.focus();
+      }
+    });
+
+    panel.querySelectorAll('a').forEach((link) => link.addEventListener('click', close));
+
+    document.addEventListener('click', (event) => {
+      if (!(event.target instanceof Node)) return;
+      if (!trigger.contains(event.target) && !panel.contains(event.target)) close();
+    });
+
+    document.addEventListener('keydown', (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && trigger.getAttribute('aria-expanded') === 'true') {
+        close();
+        trigger.focus();
+      }
+    });
+  });
+
+  // --- Mobile "Services" accordion ---
+  // Expands inline within the mobile menu rather than opening a separate panel.
+  document.querySelectorAll<HTMLButtonElement>('[data-accordion-trigger]').forEach((trigger) => {
+    const panelId = trigger.getAttribute('aria-controls');
+    const panel = panelId ? document.getElementById(panelId) : null;
+    const chevron = trigger.querySelector('[data-accordion-chevron]');
+    if (!panel) return;
+
+    trigger.addEventListener('click', () => {
+      const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+      panel.classList.toggle('hidden', isOpen);
+      trigger.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+      chevron?.classList.toggle('rotate-180', !isOpen);
     });
   });
 </script>
