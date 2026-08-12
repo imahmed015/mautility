@@ -17,13 +17,13 @@
 #   start getting blocked again. To regenerate: build the site, then for each unique
 #   inline <script>...</script> body (exact text, no trimming) across every dist/**/*.html
 #   file, compute base64(sha256(body)) and prefix with 'sha256-'.
-# - TODO: once Cloudflare Turnstile is added (see ContactForm.tsx / FeedbackForm.tsx),
-#   this CSP will need: script-src https://challenges.cloudflare.com;
-#   frame-src https://challenges.cloudflare.com; connect-src https://challenges.cloudflare.com
+# - Cloudflare Turnstile (spam protection on ContactForm.tsx / FeedbackForm.tsx) needs
+#   its script, iframe and verification XHR allowlisted: script-src, frame-src and
+#   connect-src all include https://challenges.cloudflare.com.
 
 /*
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: geolocation=(), camera=(), microphone=()
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-aMzNpU+W+4WqQIb/9I6fkP2FWcSYJe19bS6tzMk+pgw=' 'sha256-QzWFZi+FLIx23tnm9SBU4aEgx4x8DsuASP07mfqol/c=' 'sha256-Ya0pUYrC7nM5Cn/056TyVuEiz6dFGrzmkWzgON0pF0U=' 'sha256-Q2BPg90ZMplYY+FSdApNErhpWafg2hcRRbndmvxuL/Q='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://api.web3forms.com; form-action 'self' https://api.web3forms.com; base-uri 'self'; object-src 'none'; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-aMzNpU+W+4WqQIb/9I6fkP2FWcSYJe19bS6tzMk+pgw=' 'sha256-QzWFZi+FLIx23tnm9SBU4aEgx4x8DsuASP07mfqol/c=' 'sha256-Ya0pUYrC7nM5Cn/056TyVuEiz6dFGrzmkWzgON0pF0U=' 'sha256-Q2BPg90ZMplYY+FSdApNErhpWafg2hcRRbndmvxuL/Q=' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://api.web3forms.com https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; form-action 'self' https://api.web3forms.com; base-uri 'self'; object-src 'none'; frame-ancestors 'none'
