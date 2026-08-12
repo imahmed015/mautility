@@ -8,8 +8,6 @@ const utilities: {
   audience: string;
   description: string;
   highlight?: boolean;
-  image?: string;
-  imageAlt?: string;
 }[] = [
   {
     title: 'Electricity',
@@ -20,8 +18,6 @@ const utilities: {
     title: 'Gas',
     audience: 'Homeowners & businesses',
     description: 'The same rigorous comparison approach for gas contracts, including dual-fuel arrangements where useful.',
-    image: '/utilities-secondary.jpg',
-    imageAlt: 'Row of gas meters mounted on a building’s exterior wall',
   },
   {
     title: 'Water',
@@ -89,18 +85,10 @@ const brokerReasons: { title: string; description: string; icon: IconName }[] = 
 
   <section class="section-padding">
     <div class="container-page">
-      <div class="grid items-start gap-6 sm:grid-cols-2">
+      <div class="grid gap-6 sm:grid-cols-2">
         {
           utilities.map((item) => (
             <div class:list={['card', item.highlight && 'ring-2 ring-amber/50']}>
-              {item.image && (
-                <img
-                  src={item.image}
-                  alt={item.imageAlt}
-                  class="mb-5 h-40 w-full rounded-xl object-cover sm:h-48"
-                  loading="lazy"
-                />
-              )}
               <div class="flex items-center justify-between gap-3">
                 <h2 class="text-xl font-bold text-navy">{item.title}</h2>
                 <span class="chip whitespace-nowrap text-xs">{item.audience}</span>
@@ -116,6 +104,15 @@ const brokerReasons: { title: string; description: string; icon: IconName }[] = 
         supplier — water retail competition applies to business customers only. Our water service is therefore
         available to businesses, not private households.
       </div>
+
+      <!-- Standalone supporting image — not tied to any single card above, just a
+           below-the-fold banner illustrating the utilities this page covers. -->
+      <img
+        src="/utilities-secondary.jpg"
+        alt="Rows of domestic gas meters"
+        class="mt-8 h-56 w-full rounded-2xl object-cover shadow-card sm:h-72 lg:h-80"
+        loading="lazy"
+      />
     </div>
   </section>
 
