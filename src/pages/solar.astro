@@ -50,8 +50,15 @@ const whyItems: { title: string; description: string; icon: IconName }[] = [
   title="Solar Installation, Financing & Battery Storage"
   description="Independent guidance on solar installation, financing options, battery storage and realistic ROI — for homeowners and businesses across the UK. Book a free consultation."
 >
-  <section class="bg-navy">
-    <div class="container-page section-padding text-center">
+  <section class="relative overflow-hidden bg-navy">
+    <img
+      src="/solar-hero.jpg"
+      alt="Installer's gloved hands fitting solar panels on a rooftop"
+      class="absolute inset-0 h-full w-full object-cover"
+      loading="lazy"
+    />
+    <div class="absolute inset-0 bg-navy/75" aria-hidden="true"></div>
+    <div class="container-page section-padding relative text-center">
       <span class="eyebrow">Solar</span>
       <h1 class="mx-auto mt-5 max-w-3xl text-4xl font-extrabold text-white sm:text-5xl">
         Solar advice without the sales pressure
