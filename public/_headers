@@ -7,7 +7,7 @@
 # - script-src has NO 'unsafe-inline' — instead it allowlists exact sha256 hashes of
 #   the site's inline scripts (verified against the real `npm run build` output in
 #   dist/, across every page, not just the homepage):
-#     aMzNpU+W... = Navbar.astro's mobile-menu toggle (author-written, all pages)
+#     NB/bDmdC... = Navbar.astro's mobile-menu/dropdown/accordion script (author-written, all pages)
 #     QzWFZi+F... = Astro's client:load hydration bootstrap (ContactForm/FeedbackForm)
 #     Ya0pUYrC... = Astro's island props/hydration runtime (homepage, contact, feedback)
 #     Q2BPg90Z... = Astro's client:visible hydration bootstrap (homepage)
@@ -26,4 +26,4 @@
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: geolocation=(), camera=(), microphone=()
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-aMzNpU+W+4WqQIb/9I6fkP2FWcSYJe19bS6tzMk+pgw=' 'sha256-QzWFZi+FLIx23tnm9SBU4aEgx4x8DsuASP07mfqol/c=' 'sha256-Ya0pUYrC7nM5Cn/056TyVuEiz6dFGrzmkWzgON0pF0U=' 'sha256-Q2BPg90ZMplYY+FSdApNErhpWafg2hcRRbndmvxuL/Q=' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://api.web3forms.com https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; form-action 'self' https://api.web3forms.com; base-uri 'self'; object-src 'none'; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-NB/bDmdCHo5gX3bYjEyMPVsT9i3B9u5hMjf7uX/hI5c=' 'sha256-QzWFZi+FLIx23tnm9SBU4aEgx4x8DsuASP07mfqol/c=' 'sha256-Ya0pUYrC7nM5Cn/056TyVuEiz6dFGrzmkWzgON0pF0U=' 'sha256-Q2BPg90ZMplYY+FSdApNErhpWafg2hcRRbndmvxuL/Q=' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://api.web3forms.com https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; form-action 'self' https://api.web3forms.com; base-uri 'self'; object-src 'none'; frame-ancestors 'none'

@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import CTABanner from '../components/CTABanner.astro';
+import Icon, { type IconName } from '../components/Icon.astro';
 
 const utilities = [
   {
@@ -26,22 +27,26 @@ const utilities = [
   },
 ];
 
-const brokerReasons = [
+const brokerReasons: { title: string; description: string; icon: IconName }[] = [
   {
     title: 'Saves you time',
     description: 'We handle the comparisons, the paperwork and the supplier conversations, so you get your time back.',
+    icon: 'clock',
   },
   {
     title: 'Avoids auto-renewal traps',
     description: 'We track your renewal windows and act before you get rolled onto an expensive out-of-contract rate.',
+    icon: 'bell',
   },
   {
     title: 'Whole of market',
     description: "We compare across the market rather than a limited panel, so you see options you'd otherwise miss.",
+    icon: 'compare',
   },
   {
     title: 'Ongoing support',
     description: "Our relationship doesn't end at the switch — we stay on hand for questions, renewals and future reviews.",
+    icon: 'support',
   },
 ];
 ---
@@ -101,9 +106,7 @@ const brokerReasons = [
           brokerReasons.map((reason) => (
             <div class="text-center">
               <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-amber/15 text-amber-dark">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
+                <Icon name={reason.icon} class="h-6 w-6" />
               </div>
               <h3 class="mt-4 text-base font-bold text-navy">{reason.title}</h3>
               <p class="mt-2 text-sm leading-relaxed text-ink-light">{reason.description}</p>

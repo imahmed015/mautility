@@ -11,12 +11,24 @@ export const SITE = {
   tagline: 'Independent whole-of-market brokerage for energy, water, solar and trades.',
 };
 
-export const PRIMARY_NAV = [
+// A primary nav entry is either a plain link, or a parent with a nested list of
+// links (rendered as a click-to-open dropdown on desktop / accordion on mobile —
+// see Navbar.astro).
+export type NavLink = { label: string; href: string };
+export type NavParent = { label: string; children: NavLink[] };
+export type NavItem = NavLink | NavParent;
+
+export const PRIMARY_NAV: NavItem[] = [
   { label: 'Home', href: '/' },
   { label: 'About', href: '/about' },
-  { label: 'Solar', href: '/solar' },
-  { label: 'Utilities', href: '/utilities' },
-  { label: 'Fixtures', href: '/fixtures' },
+  {
+    label: 'Services',
+    children: [
+      { label: 'Solar', href: '/solar' },
+      { label: 'Utilities', href: '/utilities' },
+      { label: 'Fixtures', href: '/fixtures' },
+    ],
+  },
 ];
 
 export const FOOTER_PAGES = [

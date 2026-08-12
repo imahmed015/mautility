@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import CTABanner from '../components/CTABanner.astro';
+import Icon from '../components/Icon.astro';
 import { TRADES } from '../data/site';
 
 const projectTypes = [
@@ -75,9 +76,7 @@ const managementSteps = [
           projectTypes.map((type) => (
             <div class="card flex items-center gap-3">
               <span class="inline-flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-amber/15 text-amber-dark">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
+                <Icon name="wrench" class="h-5 w-5" />
               </span>
               <span class="font-semibold text-navy">{type}</span>
             </div>

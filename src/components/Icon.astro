@@ -1,0 +1,94 @@
+---
+// Centralized icon library. Add new concepts to ICONS below rather than inlining raw
+// <svg> markup in pages/components — keeps every icon on the site drawn in one
+// consistent, line-style set instead of duplicated/slightly-different copies.
+//
+// Icons are stroke-based (fill="none", stroke="currentColor"), 24x24 viewBox, matching
+// the handful of hand-authored Heroicons-style icons already used across the site
+// (the checkmark, envelope, phone and bolt icons below are copied verbatim from the
+// pre-existing markup so nothing changes visually where they're reused). Colour comes
+// from whatever text-* class is on the icon or its wrapper (currentColor) — pass the
+// brand navy/amber utility classes there, not baked into the icon itself.
+export type IconName =
+  | 'sun'
+  | 'bolt'
+  | 'wrench'
+  | 'check'
+  | 'mail'
+  | 'phone'
+  | 'chevron-down'
+  | 'clock'
+  | 'compare'
+  | 'target'
+  | 'chat'
+  | 'support'
+  | 'bell'
+  | 'pound'
+  | 'shield'
+  | 'home'
+  | 'leaf'
+  | 'building'
+  | 'shield-check'
+  | 'badge-check';
+
+interface Props {
+  name: IconName;
+  class?: string;
+  // Allows pass-through attributes like data-dropdown-chevron (see Navbar.astro).
+  [key: string]: unknown;
+}
+
+// Any other attributes (e.g. data-* hooks used by Navbar.astro's dropdown script)
+// pass straight through to the rendered <svg>.
+const { name, class: className = 'h-5 w-5', ...rest } = Astro.props;
+
+const ICONS: Record<IconName, string> = {
+  // Solar / sun.
+  sun: '<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.36 6.36l-1.42-1.42M7.06 7.06 5.64 5.64m12.72 0-1.42 1.42M7.06 16.94l-1.42 1.42M12 8a4 4 0 100 8 4 4 0 000-8z" />',
+  // Electricity.
+  bolt: '<path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />',
+  // Fixtures / trades.
+  wrench: '<path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17L4.5 20.25m10.98-14.15l-2.496 3.03m0 0a2.5 2.5 0 00-1.208.766l-5.877 5.877a2.652 2.652 0 103.75 3.75l5.877-5.877c.14-.469.382-.891.766-1.208m0 0l3.03-2.496M13.5 6.75l3.03-2.496" />',
+  // Generic affirmative tick (checklists, benefit lists).
+  check: '<path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />',
+  mail: '<path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />',
+  phone: '<path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />',
+  // UI chrome — dropdown/accordion disclosure arrow (matches FAQAccordion's chevron).
+  'chevron-down': '<path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />',
+  // Time / ongoing tracking.
+  clock: '<circle cx="12" cy="12" r="8.25" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5v4.9l3 1.8" />',
+  // Whole-of-market comparison.
+  compare: '<circle cx="9" cy="12" r="6.25" /><circle cx="15" cy="12" r="6.25" />',
+  // Accuracy / no guesswork.
+  target: '<circle cx="12" cy="12" r="8.25" /><circle cx="12" cy="12" r="4.5" /><circle cx="12" cy="12" r="0.75" fill="currentColor" stroke="none" />',
+  // Plain-English communication.
+  chat: '<path stroke-linecap="round" stroke-linejoin="round" d="M4.75 5.5h14.5v10.5H8.5l-3.75 3v-3h-1V5.5z" />',
+  // Ongoing support (a lifebuoy reads more clearly at icon size than a literal handshake).
+  support: '<circle cx="12" cy="12" r="8.25" /><circle cx="12" cy="12" r="3.25" /><path stroke-linecap="round" d="M6.34 6.34l2.3 2.3M17.66 6.34l-2.3 2.3M6.34 17.66l2.3-2.3M17.66 17.66l-2.3-2.3" />',
+  // Renewal-date alerts.
+  bell: '<path stroke-linecap="round" stroke-linejoin="round" d="M12 3.5a4.75 4.75 0 00-4.75 4.75v3.1c0 .82-.32 1.6-.9 2.19L4.75 15.1h14.5l-1.6-1.56a3.1 3.1 0 01-.9-2.19v-3.1A4.75 4.75 0 0012 3.5z" /><path stroke-linecap="round" d="M9.75 18a2.25 2.25 0 004.5 0" />',
+  // Cost / no hidden fees.
+  pound: '<text x="12" y="16.5" text-anchor="middle" font-size="14" font-weight="700" fill="currentColor" stroke="none">&#163;</text>',
+  shield: '<path stroke-linecap="round" stroke-linejoin="round" d="M12 3.25l6.5 2.6v5.4c0 4.15-2.75 6.9-6.5 8.35-3.75-1.45-6.5-4.2-6.5-8.35v-5.4L12 3.25z" />',
+  home: '<path stroke-linecap="round" stroke-linejoin="round" d="M4.25 11.5L12 4.25l7.75 7.25" /><path stroke-linecap="round" stroke-linejoin="round" d="M6.25 10v9.75h11.5V10" />',
+  leaf: '<path stroke-linecap="round" stroke-linejoin="round" d="M5 20.5c0-8.8 5.7-14.5 14.5-14.5.4 8.8-5.7 14.5-14.5 14.5z" /><path stroke-linecap="round" d="M5 20.5c2.7-5.4 6.3-9 11.5-11.7" />',
+  // Company registration.
+  building: '<rect x="6.25" y="3.75" width="11.5" height="16.5" rx="1" /><path stroke-linecap="round" d="M9 7.5h1M14 7.5h1M9 11h1M14 11h1M9 14.5h1M14 14.5h1" /><path stroke-linecap="round" stroke-linejoin="round" d="M10 20.25v-3.5h4v3.5" />',
+  // ICO / data-protection registration.
+  'shield-check': '<path stroke-linecap="round" stroke-linejoin="round" d="M12 3.25l6.5 2.6v5.4c0 4.15-2.75 6.9-6.5 8.35-3.75-1.45-6.5-4.2-6.5-8.35v-5.4L12 3.25z" /><path stroke-linecap="round" stroke-linejoin="round" d="M9.25 12.25l1.85 1.85 3.65-3.85" />',
+  // DRO / ADR accreditation.
+  'badge-check': '<circle cx="12" cy="12" r="8.25" /><path stroke-linecap="round" stroke-linejoin="round" d="M8.5 12.25l2.25 2.25 4.25-4.5" />',
+};
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  class={className}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.8"
+  aria-hidden="true"
+  {...rest}
+  set:html={ICONS[name]}
+/>
