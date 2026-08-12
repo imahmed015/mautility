@@ -29,7 +29,8 @@ export type IconName =
   | 'leaf'
   | 'building'
   | 'shield-check'
-  | 'badge-check';
+  | 'badge-check'
+  | 'document';
 
 interface Props {
   name: IconName;
@@ -78,6 +79,8 @@ const ICONS: Record<IconName, string> = {
   'shield-check': '<path stroke-linecap="round" stroke-linejoin="round" d="M12 3.25l6.5 2.6v5.4c0 4.15-2.75 6.9-6.5 8.35-3.75-1.45-6.5-4.2-6.5-8.35v-5.4L12 3.25z" /><path stroke-linecap="round" stroke-linejoin="round" d="M9.25 12.25l1.85 1.85 3.65-3.85" />',
   // DRO / ADR accreditation.
   'badge-check': '<circle cx="12" cy="12" r="8.25" /><path stroke-linecap="round" stroke-linejoin="round" d="M8.5 12.25l2.25 2.25 4.25-4.5" />',
+  // Certificate / PDF document links.
+  document: '<path stroke-linecap="round" stroke-linejoin="round" d="M7.25 3.75h6l4.5 4.5v11.25a1.5 1.5 0 01-1.5 1.5h-9a1.5 1.5 0 01-1.5-1.5V5.25a1.5 1.5 0 011.5-1.5z" /><path stroke-linecap="round" stroke-linejoin="round" d="M13.25 3.75V8.5h4.5" /><path stroke-linecap="round" d="M9.25 13h5.5M9.25 16h5.5" />',
 };
 ---
 
