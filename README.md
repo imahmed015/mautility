@@ -85,15 +85,18 @@ Then in Cloudflare Pages, choose **Upload assets** and upload the contents of `d
 
 ## 6. Post-launch checklist
 
-- [ ] Set real `PUBLIC_WEB3FORMS_ACCESS_KEY` and restrict it to `mautilitysolutions.co.uk` in the Web3Forms dashboard.
-- [ ] Set real `PUBLIC_BOOKINGS_URL` from Microsoft Bookings.
-- [ ] Add Cloudflare Turnstile: both [`ContactForm.tsx`](src/components/ContactForm.tsx) and [`FeedbackForm.tsx`](src/components/FeedbackForm.tsx) have clearly marked `TODO` placeholders for wiring in a Turnstile widget once a site key exists — search for `Turnstile` in `src/components/`.
+- [x] Set real `PUBLIC_WEB3FORMS_ACCESS_KEY` — set in `.env` (local) and Cloudflare → Settings → Variables and secrets (Production + Preview). ⚠️ Still confirm the domain-restriction step *inside the Web3Forms dashboard itself* (Settings → restrict key to `mautilitysolutions.co.uk`) — that's a Web3Forms-side setting, not something in this repo.
+- [x] Set real `PUBLIC_BOOKINGS_URL` — set in `.env` and Cloudflare (Production + Preview); verified live on `/contact` (opens the real Microsoft Bookings page, no login required).
+- [ ] Add Cloudflare Turnstile: both [`ContactForm.tsx`](src/components/ContactForm.tsx) and [`FeedbackForm.tsx`](src/components/FeedbackForm.tsx) have clearly marked `TODO` placeholders for wiring in a Turnstile widget once a site key exists — search for `Turnstile` in `src/components/`. Note: adding it will also need new CSP entries in `public/_headers` (already noted there).
 - [ ] Once ADR (e.g. Dispute Resolution Ombudsman) accreditation is confirmed, flip `ENABLED = true` in [`src/components/AdrBadge.astro`](src/components/AdrBadge.astro) and supply the badge artwork + verification link. It's referenced once, on `/complaints`.
-- [ ] Replace the placeholder phone number in [`src/data/site.ts`](src/data/site.ts) (`SITE.phone` / `SITE.phoneHref`) with the real business number.
-- [ ] Confirm `complaints@` and `hello@` mailboxes in [`src/data/site.ts`](src/data/site.ts) exist and are monitored.
+- [x] Replace the placeholder phone number in [`src/data/site.ts`](src/data/site.ts) (`SITE.phone` / `SITE.phoneHref`) with the real business number — done (`07312 176843`).
+- [ ] Confirm the `admin@mautilitysolutions.co.uk` mailbox in [`src/data/site.ts`](src/data/site.ts) (used for both `email` and `complaintsEmail` — no separate complaints/hello mailbox exists yet) is actively monitored.
 - [ ] Once real, consented feedback exists via `/feedback` (opt-in checkbox ticked), manually add a Testimonials section — none is included by default, by design.
-- [ ] Verify `sitemap.xml` and `robots.txt` are reachable at the production domain after first deploy.
+- [x] Verify `sitemap.xml` and `robots.txt` are reachable at the production domain after first deploy — confirmed live: `sitemap.xml` returns 200 with `Content-Type: application/xml` and lists all 10 pages; `robots.txt` correctly points to it.
 - [ ] If a page is added or removed later, update `public/sitemap.xml` to match (it's hand-written, not auto-generated — see the note in `astro.config.mjs`).
+- [x] Submit the site to Google Search Console — domain property verified via DNS TXT record (added in Cloudflare DNS), sitemap submitted and accepted.
+- [x] Create a Google Business Profile — set up as a service-area business (no public address), phone-verified, category/description/services filled in.
+- [x] Run `npm audit` and address findings — fixed both high-severity issues (outdated `astro`, `sharp`/libvips CVEs) by upgrading `astro` to `7.2.1` and replacing the unmaintained `@astrojs/tailwind` integration with plain PostCSS. 3 remaining (2 moderate, 1 high) are dev-server-only `esbuild`/`vite` issues via `@astrojs/react` that don't affect the deployed static site.
 
 ## 7. Project structure
 
