@@ -1,5 +1,6 @@
-import { useId, useState, type FormEvent } from 'react';
+import { useId, useRef, useState, type FormEvent } from 'react';
 import { SERVICE_OPTIONS } from '../data/site';
+import { useTurnstile } from '../hooks/useTurnstile';
 
 type FormState = {
   fullName: string;
@@ -93,6 +94,8 @@ export default function ContactForm() {
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
   const [serverMessage, setServerMessage] = useState('');
   const idPrefix = useId();
+  const turnstileRef = useRef<HTMLDivElement>(null);
+  const turnstileToken = useTurnstile(turnstileRef, import.meta.env.PUBLIC_TURNSTILE_SITE_KEY);
 
   const setField = <K extends keyof FormState>(key: K, value: FormState[K]) => {
     setValues((prev) => ({ ...prev, [key]: value }));
@@ -151,8 +154,7 @@ export default function ContactForm() {
           main_concern: values.concern,
           best_time_to_call: values.callTime,
           message: values.message || '(no message provided)',
-          // TODO: Once Cloudflare Turnstile is configured, add the token here, e.g.
-          // 'cf-turnstile-response': turnstileToken,
+          'cf-turnstile-response': turnstileToken,
         }),
       });
 
@@ -182,13 +184,10 @@ export default function ContactForm() {
         <input type="text" id={fieldId('botcheck')} name="botcheck" tabIndex={-1} autoComplete="off" />
       </div>
 
-      {/*
-        PLACEHOLDER: Cloudflare Turnstile
-        Once a site key is issued, add the widget here, e.g.:
-        <div className="cf-turnstile" data-sitekey={import.meta.env.PUBLIC_TURNSTILE_SITE_KEY}></div>
-        and load the Turnstile script in Layout.astro's <head>. Then pass the resulting
-        token as `cf-turnstile-response` in the Web3Forms payload above.
-      */}
+      {/* Cloudflare Turnstile — spam protection. Rendered explicitly by the useTurnstile
+          hook (see src/hooks/useTurnstile.ts) after hydration, not via the script's
+          auto-scan, to avoid a DOM-mutation-vs-hydration race that breaks React. */}
+      {import.meta.env.PUBLIC_TURNSTILE_SITE_KEY && <div ref={turnstileRef} />}
 
       <div className="grid gap-6 sm:grid-cols-2">
         <div>
