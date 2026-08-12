@@ -97,27 +97,15 @@ const faqs = [
   description="MA Utility Solutions is an independent, whole-of-market UK brokerage helping homeowners and businesses secure better deals on energy, water, solar and trusted trades. Book a free consultation."
 >
   <!-- Hero -->
-  <!--
-    TODO: home-hero.jpg was expected in public/ but hasn't arrived yet — this hero
-    still uses a decorative gradient (below) instead of a real photo. Do not use a
-    placeholder or stock image without checking its license.
-
-    Once home-hero.jpg exists, follow the same pattern already used on solar.astro,
-    fixtures.astro and utilities.astro: a full-bleed <img> behind the section with a
-    bg-navy/75 overlay div on top for text contrast, e.g.:
-      <img
-        src="/home-hero.jpg"
-        alt="[describe what's actually in the photo once supplied]"
-        class="absolute inset-0 h-full w-full object-cover"
-        loading="eager"
-        fetchpriority="high"
-      />
-      <div class="absolute inset-0 bg-navy/75" aria-hidden="true"></div>
-    Unlike those other pages, this is the homepage hero, so use loading="eager" (or
-    fetchpriority="high") rather than loading="lazy" — it's above the fold and visible
-    immediately on load.
-  -->
   <section class="relative overflow-hidden bg-navy">
+    <img
+      src="/home-hero.jpg"
+      alt="Installer's gloved hands fitting solar panels on a rooftop"
+      class="absolute inset-0 h-full w-full object-cover"
+      loading="eager"
+      fetchpriority="high"
+    />
+    <div class="absolute inset-0 bg-navy/75" aria-hidden="true"></div>
     <div
       class="pointer-events-none absolute inset-0 opacity-20"
       style="background-image: radial-gradient(circle at 20% 20%, #F59E0B 0, transparent 40%), radial-gradient(circle at 85% 60%, #F59E0B 0, transparent 35%);"
