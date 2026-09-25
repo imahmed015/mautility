@@ -177,7 +177,7 @@ export default function FeedbackForm() {
       <div className="grid gap-6 sm:grid-cols-2">
         <div>
           <label htmlFor={fieldId('name')} className="field-label">
-            Name <span className="text-amber-dark">*</span>
+            Name <span className="text-amber-ink">*</span>
           </label>
           <input
             id={fieldId('name')}
@@ -199,7 +199,7 @@ export default function FeedbackForm() {
 
         <div>
           <label htmlFor={fieldId('email')} className="field-label">
-            Email <span className="text-amber-dark">*</span>
+            Email <span className="text-amber-ink">*</span>
           </label>
           <input
             id={fieldId('email')}
@@ -252,7 +252,7 @@ export default function FeedbackForm() {
 
       <div className="sm:max-w-xs">
         <label htmlFor={fieldId('rating')} className="field-label">
-          Overall rating <span className="text-amber-dark">*</span>
+          Overall rating <span className="text-amber-ink">*</span>
         </label>
         <select
           id={fieldId('rating')}
@@ -279,7 +279,7 @@ export default function FeedbackForm() {
 
       <div>
         <label htmlFor={fieldId('feedback')} className="field-label">
-          Your feedback <span className="text-amber-dark">*</span>
+          Your feedback <span className="text-amber-ink">*</span>
         </label>
         <textarea
           id={fieldId('feedback')}
@@ -325,7 +325,7 @@ export default function FeedbackForm() {
         <p className="mt-3 text-xs leading-relaxed text-ink-light">
           We'll use these details to review your feedback and, only if you ticked the box above, to publish it as a
           testimonial. See our{' '}
-          <a href="/privacy" className="font-semibold text-navy underline hover:text-amber-dark">
+          <a href="/privacy" className="font-semibold text-navy underline hover:text-amber-ink">
             Privacy Policy
           </a>{' '}
           for how we handle your data.
