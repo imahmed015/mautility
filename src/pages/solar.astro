@@ -55,11 +55,12 @@ const whyItems: { title: string; description: string; icon: IconName }[] = [
       src="/solar-hero.jpg"
       alt="Solar panels installed on a UK residential rooftop"
       class="absolute inset-0 h-full w-full object-cover"
-      loading="lazy"
+      loading="eager"
+      fetchpriority="high"
     />
     <div class="absolute inset-0 bg-navy/75" aria-hidden="true"></div>
     <div class="container-page section-padding relative text-center">
-      <span class="eyebrow">Solar</span>
+      <span class="eyebrow-inverse">Solar</span>
       <h1 class="mx-auto mt-5 max-w-3xl text-4xl font-extrabold text-white sm:text-5xl">
         Solar advice without the sales pressure
       </h1>

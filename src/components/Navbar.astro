@@ -35,27 +35,27 @@ function slug(label: string) {
                 <button
                   type="button"
                   class:list={[
-                    'flex items-center gap-1 text-sm font-medium transition hover:text-amber-dark',
+                    'flex items-center gap-1 text-sm font-medium transition hover:text-amber-ink',
                     isParentActive(item.children) ? 'text-navy font-bold' : 'text-ink',
                   ]}
                   aria-expanded="false"
-                  aria-haspopup="true"
                   aria-controls={`${slug(item.label)}-dropdown-desktop`}
                   data-dropdown-trigger
                 >
                   {item.label}
                   <Icon name="chevron-down" class="h-4 w-4 transition-transform" data-dropdown-chevron />
                 </button>
+                {/* Disclosure pattern (button + aria-expanded + a plain list of links), not an
+                    ARIA menu: role="menu" would promise arrow-key navigation that site nav
+                    links don't need. Tab/Shift+Tab move through the links as normal. */}
                 <ul
                   id={`${slug(item.label)}-dropdown-desktop`}
-                  role="menu"
                   class="absolute left-0 top-full z-10 mt-2 hidden w-48 rounded-xl bg-white p-2 shadow-card-hover ring-1 ring-navy/10"
                   data-dropdown-panel
                 >
                   {item.children.map((child) => (
-                    <li role="none">
+                    <li>
                       <a
-                        role="menuitem"
                         href={child.href}
                         class:list={[
                           'block rounded-lg px-3 py-2 text-sm font-medium transition hover:bg-navy/5',
@@ -74,7 +74,7 @@ function slug(label: string) {
                 <a
                   href={item.href}
                   class:list={[
-                    'text-sm font-medium transition hover:text-amber-dark',
+                    'text-sm font-medium transition hover:text-amber-ink',
                     isActive(item.href) ? 'text-navy font-bold' : 'text-ink',
                   ]}
                   aria-current={isActive(item.href) ? 'page' : undefined}

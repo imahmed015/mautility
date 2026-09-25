@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import AdrBadge from '../components/AdrBadge.astro';
 import Icon from '../components/Icon.astro';
-import { SITE } from '../data/site';
+import { SITE, COMPANY } from '../data/site';
 
 const processSteps = [
   {
@@ -29,7 +29,7 @@ const processSteps = [
 >
   <section class="bg-navy">
     <div class="container-page section-padding text-center">
-      <span class="eyebrow">Complaints</span>
+      <span class="eyebrow-inverse">Complaints</span>
       <h1 class="mx-auto mt-5 max-w-2xl text-4xl font-extrabold text-white sm:text-5xl">Complaints Procedure</h1>
       <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/75">
         If something hasn't gone the way it should, we want to know. Here's exactly how to tell us and what happens
@@ -52,7 +52,7 @@ const processSteps = [
             </span>
             <div>
               <p class="text-sm font-semibold text-navy">Email</p>
-              <a href={`mailto:${SITE.complaintsEmail}`} class="text-sm text-ink-light hover:text-amber-dark">{SITE.complaintsEmail}</a>
+              <a href={`mailto:${SITE.complaintsEmail}`} class="text-sm text-ink-light hover:text-amber-ink">{SITE.complaintsEmail}</a>
             </div>
           </li>
           <li class="card flex items-center gap-4">
@@ -61,7 +61,7 @@ const processSteps = [
             </span>
             <div>
               <p class="text-sm font-semibold text-navy">Phone</p>
-              <a href={SITE.phoneHref} class="text-sm text-ink-light hover:text-amber-dark">{SITE.phone}</a>
+              <a href={SITE.phoneHref} class="text-sm text-ink-light hover:text-amber-ink">{SITE.phone}</a>
             </div>
           </li>
         </ul>
@@ -70,29 +70,30 @@ const processSteps = [
           it helps us investigate quickly and fairly.
         </p>
 
-        <!-- ADR accreditation placeholder — hidden until membership is confirmed. -->
+        <!-- ADR accreditation (DRO member E3593) — see AdrBadge.astro. -->
         <AdrBadge />
 
-        <!-- Certificate downloads — styled like AdrBadge's card so they read as part of
-             the same accreditation group, not a separate visual treatment. -->
+        <!-- Accreditation proof — styled like AdrBadge's card so they read as part of the
+             same group. ICO links to the ICO's own public register (always current)
+             rather than a self-hosted certificate that goes stale at each renewal. -->
         <div class="mt-3 flex flex-wrap gap-3">
           <a
             href="/dro-cert.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 rounded-xl border border-navy/10 bg-white px-4 py-2.5 text-sm font-semibold text-navy transition hover:border-amber/40 hover:text-amber-dark"
+            class="inline-flex items-center gap-2 rounded-xl border border-navy/10 bg-white px-4 py-2.5 text-sm font-semibold text-navy transition hover:border-amber/40 hover:text-amber-ink"
           >
             <Icon name="document" class="h-4 w-4 flex-shrink-0 text-amber-dark" />
             View DRO Certificate (PDF)
           </a>
           <a
-            href="/ico-cert.pdf"
+            href={COMPANY.icoRegisterUrl}
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 rounded-xl border border-navy/10 bg-white px-4 py-2.5 text-sm font-semibold text-navy transition hover:border-amber/40 hover:text-amber-dark"
+            class="inline-flex items-center gap-2 rounded-xl border border-navy/10 bg-white px-4 py-2.5 text-sm font-semibold text-navy transition hover:border-amber/40 hover:text-amber-ink"
           >
-            <Icon name="document" class="h-4 w-4 flex-shrink-0 text-amber-dark" />
-            View ICO Registration Certificate (PDF)
+            <Icon name="shield-check" class="h-4 w-4 flex-shrink-0 text-amber-dark" />
+            View ICO Registration (ico.org.uk)
           </a>
         </div>
       </div>

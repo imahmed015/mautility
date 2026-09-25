@@ -29,8 +29,10 @@ const CALL_TIME_OPTIONS = ['Morning', 'Afternoon', 'Evening', 'Anytime'];
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // Standard UK postcode pattern (covers all current formats, e.g. SW1A 1AA, M1 1AE, B33 8TH, CR2 6XH, DN55 1PT).
+// The outer (?:...) group matters: without it, ^ only applied to the GIR 0AA branch and
+// $ only to the main branch, so e.g. "not a postcode YO31 7EX" passed validation.
 const UK_POSTCODE_REGEX =
-  /^([Gg][Ii][Rr] ?0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})$/i;
+  /^(?:([Gg][Ii][Rr] ?0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2}))$/i;
 
 const INITIAL_STATE: FormState = {
   fullName: '',
@@ -220,7 +222,7 @@ export default function ContactForm() {
       <div className="grid gap-6 sm:grid-cols-2">
         <div>
           <label htmlFor={fieldId('fullName')} className="field-label">
-            Full Name <span className="text-amber-dark">*</span>
+            Full Name <span className="text-amber-ink">*</span>
           </label>
           <input
             id={fieldId('fullName')}
@@ -242,7 +244,7 @@ export default function ContactForm() {
 
         <div>
           <label htmlFor={fieldId('email')} className="field-label">
-            Email <span className="text-amber-dark">*</span>
+            Email <span className="text-amber-ink">*</span>
           </label>
           <input
             id={fieldId('email')}
@@ -264,7 +266,7 @@ export default function ContactForm() {
 
         <div>
           <label htmlFor={fieldId('phone')} className="field-label">
-            Phone <span className="text-amber-dark">*</span>
+            Phone <span className="text-amber-ink">*</span>
           </label>
           <input
             id={fieldId('phone')}
@@ -287,7 +289,7 @@ export default function ContactForm() {
 
         <div>
           <label htmlFor={fieldId('postcode')} className="field-label">
-            Postcode <span className="text-amber-dark">*</span>
+            Postcode <span className="text-amber-ink">*</span>
           </label>
           <input
             id={fieldId('postcode')}
@@ -311,7 +313,7 @@ export default function ContactForm() {
 
       <fieldset>
         <legend className="field-label">
-          Services you're interested in <span className="text-amber-dark">*</span>
+          Services you're interested in <span className="text-amber-ink">*</span>
         </legend>
         <div className="flex flex-wrap gap-3">
           {SERVICE_OPTIONS.map((service) => {
@@ -345,7 +347,7 @@ export default function ContactForm() {
       <div className="grid gap-6 sm:grid-cols-2">
         <div>
           <label htmlFor={fieldId('concern')} className="field-label">
-            Main concern <span className="text-amber-dark">*</span>
+            Main concern <span className="text-amber-ink">*</span>
           </label>
           <select
             id={fieldId('concern')}
@@ -372,7 +374,7 @@ export default function ContactForm() {
 
         <div>
           <label htmlFor={fieldId('callTime')} className="field-label">
-            Best time to call <span className="text-amber-dark">*</span>
+            Best time to call <span className="text-amber-ink">*</span>
           </label>
           <select
             id={fieldId('callTime')}
@@ -418,7 +420,7 @@ export default function ContactForm() {
         </button>
         <p className="mt-3 text-xs leading-relaxed text-ink-light">
           We'll use these details to respond to your enquiry. See our{' '}
-          <a href="/privacy" className="font-semibold text-navy underline hover:text-amber-dark">
+          <a href="/privacy" className="font-semibold text-navy underline hover:text-amber-ink">
             Privacy Policy
           </a>{' '}
           for how we handle your data.

@@ -42,11 +42,12 @@ const managementSteps = [
       src="/fixtures-hero.jpg"
       alt="Electrician working on a wall-mounted consumer unit and copper pipework"
       class="absolute inset-0 h-full w-full object-cover"
-      loading="lazy"
+      loading="eager"
+      fetchpriority="high"
     />
     <div class="absolute inset-0 bg-navy/75" aria-hidden="true"></div>
     <div class="container-page section-padding relative text-center">
-      <span class="eyebrow">Fixtures</span>
+      <span class="eyebrow-inverse">Fixtures</span>
       <h1 class="mx-auto mt-5 max-w-3xl text-4xl font-extrabold text-white sm:text-5xl">
         The right trades, without the chasing
       </h1>

@@ -12,6 +12,11 @@ export default {
         amber: {
           DEFAULT: '#F59E0B',
           dark: '#D97706',
+          // For small TEXT on white/light backgrounds (links, labels, eyebrows). amber-dark
+          // is only ~3.2:1 on white — fails WCAG AA (4.5:1) for normal-size text; this is
+          // ~5.4:1 on white and ~4.8:1 inside an eyebrow on the surface background. Keep
+          // amber/amber-dark for fills, icons and large text (24px+).
+          ink: '#AD4F08',
         },
         surface: '#F8FAFC',
         ink: {

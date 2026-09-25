@@ -83,8 +83,16 @@
     @apply inline-flex items-center rounded-full bg-navy/5 px-4 py-2 text-sm font-medium text-navy ring-1 ring-navy/10;
   }
 
+  /* Section label for LIGHT backgrounds. amber-ink on amber/10 measures ~5.0:1 over white
+     and ~4.8:1 over the surface background (WCAG AA needs 4.5:1). */
   .eyebrow {
-    @apply inline-flex items-center rounded-full bg-amber/15 px-3 py-1 text-xs font-bold uppercase tracking-wide text-amber-dark;
+    @apply inline-flex items-center rounded-full bg-amber/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-amber-ink;
+  }
+
+  /* Same label for NAVY backgrounds (page heroes) — the darker text above would fail
+     there, so this uses the bright amber instead (~6:1 on navy). */
+  .eyebrow-inverse {
+    @apply inline-flex items-center rounded-full bg-amber/15 px-3 py-1 text-xs font-bold uppercase tracking-wide text-amber;
   }
 
   .field-label {
