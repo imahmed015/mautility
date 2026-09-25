@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import CTABanner from '../components/CTABanner.astro';
 import Icon, { type IconName } from '../components/Icon.astro';
-import { Picture } from 'astro:assets';
+import PageHero from '../components/PageHero.astro';
 import solarHero from '../assets/images/solar-hero.jpg';
 
 // Pre-ticks this service on the contact form (see ContactForm.tsx).
@@ -55,34 +55,16 @@ const whyItems: { title: string; description: string; icon: IconName }[] = [
   title="Solar Installation, Financing & Battery Storage"
   description="Independent guidance on solar installation, financing options, battery storage and realistic ROI — for homeowners and businesses across the UK. Book a free consultation."
 >
-  <section class="relative overflow-hidden bg-navy">
-    <!-- Responsive AVIF/WebP + JPEG fallback; see index.astro. Original is 1400px wide. -->
-    <Picture
-      src={solarHero}
-      formats={['avif', 'webp']}
-      fallbackFormat="jpg"
-      widths={[640, 960, 1400]}
-      sizes="100vw"
-      alt="Solar panels installed on a UK residential rooftop"
-      class="absolute inset-0 h-full w-full object-cover"
-      loading="eager"
-      fetchpriority="high"
-    />
-    <div class="absolute inset-0 bg-navy/75" aria-hidden="true"></div>
-    <div class="container-page section-padding relative text-center">
-      <span class="eyebrow-inverse">Solar</span>
-      <h1 class="mx-auto mt-5 max-w-3xl text-4xl font-extrabold text-white sm:text-5xl">
-        Solar advice without the sales pressure
-      </h1>
-      <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/75">
-        Installation, financing and battery storage — explained honestly, with realistic numbers, before you commit
-        to anything.
-      </p>
-      <div class="mt-9">
-        <a href={contactHref} class="btn-primary px-8 py-3.5 text-base">Book a Free Consultation</a>
-      </div>
-    </div>
-  </section>
+  <PageHero
+    eyebrow="Solar"
+    title="Solar advice without the sales pressure"
+    image={solarHero}
+    imageAlt="Solar panels installed on a UK residential rooftop"
+    ctaHref={contactHref}
+  >
+    Installation, financing and battery storage — explained honestly, with realistic numbers, before you commit to
+    anything.
+  </PageHero>
 
   <section class="section-padding">
     <div class="container-page">

@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import CTABanner from '../components/CTABanner.astro';
 import Icon from '../components/Icon.astro';
-import { Picture } from 'astro:assets';
+import PageHero from '../components/PageHero.astro';
 import fixturesHero from '../assets/images/fixtures-hero.jpg';
 
 // Pre-ticks this service on the contact form (see ContactForm.tsx).
@@ -42,37 +42,19 @@ const managementSteps = [
   title="Trades & Fixtures Sourcing for Fit-Outs and Renovations"
   description="We source and manage vetted trades — carpenters, plumbers, electricians and more — for fit-outs, renovations, repairs and new builds. Comparable quotes, one point of contact."
 >
-  <section class="relative overflow-hidden bg-navy">
-    <!-- Responsive AVIF/WebP + JPEG fallback; see index.astro.
-         TODO: this photo is only 384x672 (portrait), so it's upscaled 3-5x to fill the hero
-         and looks soft on larger screens. Replace with a landscape photo at least 1600px
-         wide, then add wider entries to `widths` (e.g. [640, 960, 1600]). -->
-    <Picture
-      src={fixturesHero}
-      formats={['avif', 'webp']}
-      fallbackFormat="jpg"
-      widths={[384]}
-      sizes="100vw"
-      alt="Electrician working on a wall-mounted consumer unit and copper pipework"
-      class="absolute inset-0 h-full w-full object-cover"
-      loading="eager"
-      fetchpriority="high"
-    />
-    <div class="absolute inset-0 bg-navy/75" aria-hidden="true"></div>
-    <div class="container-page section-padding relative text-center">
-      <span class="eyebrow-inverse">Fixtures</span>
-      <h1 class="mx-auto mt-5 max-w-3xl text-4xl font-extrabold text-white sm:text-5xl">
-        The right trades, without the chasing
-      </h1>
-      <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/75">
-        We source and manage vetted contractors for your project, so you get comparable quotes and one point of
-        contact from start to finish.
-      </p>
-      <div class="mt-9">
-        <a href={contactHref} class="btn-primary px-8 py-3.5 text-base">Book a Free Consultation</a>
-      </div>
-    </div>
-  </section>
+  <!-- TODO: this photo is only 384x672 (portrait), so it's upscaled 3-5x to fill the hero and
+       looks soft on larger screens. Replace src/assets/images/fixtures-hero.jpg with a landscape
+       photo at least 1600px wide — PageHero picks up the larger size automatically. -->
+  <PageHero
+    eyebrow="Fixtures"
+    title="The right trades, without the chasing"
+    image={fixturesHero}
+    imageAlt="Electrician working on a wall-mounted consumer unit and copper pipework"
+    ctaHref={contactHref}
+  >
+    We source and manage vetted contractors for your project, so you get comparable quotes and one point of contact
+    from start to finish.
+  </PageHero>
 
   <section class="section-padding">
     <div class="container-page">

@@ -4,6 +4,7 @@ import CTABanner from '../components/CTABanner.astro';
 import Icon, { type IconName } from '../components/Icon.astro';
 import RenewalHelper from '../components/RenewalHelper.astro';
 import { Picture } from 'astro:assets';
+import PageHero from '../components/PageHero.astro';
 import utilitiesHero from '../assets/images/utilities-hero.jpg';
 import utilitiesSecondary from '../assets/images/utilities-secondary.jpg';
 
@@ -68,34 +69,16 @@ const brokerReasons: { title: string; description: string; icon: IconName }[] = 
   title="Electricity, Gas & Business Water Brokerage"
   description="Whole-of-market electricity and gas comparisons for homes and businesses, plus business water switching and multi-site utility management. Book a free consultation."
 >
-  <section class="relative overflow-hidden bg-navy">
-    <!-- Responsive AVIF/WebP + JPEG fallback; see index.astro. Original is 1920px wide. -->
-    <Picture
-      src={utilitiesHero}
-      formats={['avif', 'webp']}
-      fallbackFormat="jpg"
-      widths={[640, 960, 1280, 1920]}
-      sizes="100vw"
-      alt="High-voltage electricity transmission pylons and power lines at dusk"
-      class="absolute inset-0 h-full w-full object-cover"
-      loading="eager"
-      fetchpriority="high"
-    />
-    <div class="absolute inset-0 bg-navy/75" aria-hidden="true"></div>
-    <div class="container-page section-padding relative text-center">
-      <span class="eyebrow-inverse">Utilities</span>
-      <h1 class="mx-auto mt-5 max-w-3xl text-4xl font-extrabold text-white sm:text-5xl">
-        Electricity, gas and business water — sorted properly
-      </h1>
-      <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/75">
-        Whole-of-market comparisons and ongoing contract management, so you're never the last to know your renewal
-        is coming up.
-      </p>
-      <div class="mt-9">
-        <a href={contactHref} class="btn-primary px-8 py-3.5 text-base">Book a Free Consultation</a>
-      </div>
-    </div>
-  </section>
+  <PageHero
+    eyebrow="Utilities"
+    title="Electricity, gas and business water — sorted properly"
+    image={utilitiesHero}
+    imageAlt="High-voltage electricity transmission pylons and power lines at dusk"
+    ctaHref={contactHref}
+  >
+    Whole-of-market comparisons and ongoing contract management, so you're never the last to know your renewal is
+    coming up.
+  </PageHero>
 
   <section class="section-padding">
     <div class="container-page">
