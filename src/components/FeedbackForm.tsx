@@ -1,4 +1,4 @@
-import { useId, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { SERVICE_OPTIONS, SITE } from '../data/site';
 import { useTurnstile } from '../hooks/useTurnstile';
 
@@ -25,6 +25,9 @@ const INITIAL_STATE: FormState = {
   feedback: '',
   consentToPublish: false,
 };
+
+// On-screen order of validated fields (matching each input's `name`) — see ContactForm.tsx.
+const FIELD_ORDER: (keyof FormState)[] = ['name', 'email', 'rating', 'feedback'];
 
 function validate(values: FormState): FormErrors {
   const errors: FormErrors = {};
@@ -60,6 +63,17 @@ export default function FeedbackForm() {
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
   const [serverMessage, setServerMessage] = useState('');
   const idPrefix = useId();
+  const formRef = useRef<HTMLFormElement>(null);
+  const focusFirstError = useRef(false);
+
+  // After a failed submit, focus the first invalid field once its error is rendered.
+  useEffect(() => {
+    if (!focusFirstError.current) return;
+    focusFirstError.current = false;
+    const first = FIELD_ORDER.find((key) => errors[key]);
+    const el = first ? formRef.current?.elements.namedItem(first) : null;
+    if (el instanceof HTMLElement) el.focus();
+  }, [errors]);
   const turnstileRef = useRef<HTMLDivElement>(null);
   const { token: turnstileToken, reset: resetTurnstile } = useTurnstile(
     turnstileRef,
@@ -89,6 +103,7 @@ export default function FeedbackForm() {
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length > 0) {
+      focusFirstError.current = true;
       return;
     }
 
@@ -156,6 +171,7 @@ export default function FeedbackForm() {
   return (
     // Pre-hydration / no-JS fallback only — see ContactForm.tsx.
     <form
+      ref={formRef}
       noValidate
       onSubmit={handleSubmit}
       className="space-y-6"
