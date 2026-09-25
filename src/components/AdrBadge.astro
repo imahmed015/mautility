@@ -1,14 +1,15 @@
 ---
 // ADR (Alternative Dispute Resolution) accreditation badge — The Dispute Resolution
-// Ombudsman. Membership is confirmed (Member E3593 — see Credentials.astro), so this
-// is now switched on across every page that renders <AdrBadge /> (currently only
-// /complaints).
+// Ombudsman. Membership is confirmed (member number in COMPANY, site.ts), so this is
+// switched on across every page that renders <AdrBadge /> (currently only /complaints).
 //
 // badgeHref points at DRO's public site rather than a per-member verification page —
 // we don't have one of those.
+import { COMPANY } from '../data/site';
+
 const ENABLED = true;
-const badgeName = 'The Dispute Resolution Ombudsman';
-const badgeHref = 'https://www.disputeresolutionombudsman.org/';
+const badgeName = COMPANY.adrScheme;
+const badgeHref = COMPANY.adrSchemeUrl;
 // Artwork supplied by DRO — a wide wordmark logo (198x50px, ~4:1). Sized by height with
 // w-auto so it keeps its own aspect ratio rather than stretching; width/height attrs
 // below are the real intrinsic size (aspect-ratio hint to avoid layout shift), while the

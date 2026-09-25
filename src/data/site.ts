@@ -24,6 +24,18 @@ export const COMPANY = {
   // The ICO's own public register entry — always current (unlike a downloaded certificate,
   // which goes stale at each annual renewal) and offers the official certificate download.
   icoRegisterUrl: 'https://ico.org.uk/ESDWebPages/Entry/ZC203801',
+  // ADR scheme membership (shown by Credentials.astro and AdrBadge.astro).
+  adrScheme: 'The Dispute Resolution Ombudsman',
+  adrSchemeUrl: 'https://www.disputeresolutionombudsman.org/',
+  adrMemberNumber: 'E3593',
+};
+
+// Headline figures used on more than one page (homepage hero, About page), so they can't
+// drift apart. Keep them true and verifiable — they're trust claims.
+export const STATS = {
+  accountsManaged: '300+',
+  marketCoverage: '100%',
+  experience: '1+ year',
 };
 
 // A primary nav entry is either a plain link, or a parent with a nested list of
