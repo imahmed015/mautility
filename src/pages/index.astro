@@ -1,7 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import CTABanner from '../components/CTABanner.astro';
-import FAQAccordion from '../components/FAQAccordion';
+import FAQ from '../components/FAQ.astro';
+import { SITE, COMPANY } from '../data/site';
 import Icon, { type IconName } from '../components/Icon.astro';
 
 const services: { name: string; href: string; description: string; icon: IconName }[] = [
@@ -90,12 +91,46 @@ const faqs = [
       "We're paid a commission by the supplier or contractor once a deal completes. That commission is included in the price you pay — built into your unit rates or the contractor's quote, rather than charged to you separately — and we'll always tell you exactly how much it is before you agree to anything.",
   },
 ];
+
+// Structured data (schema.org JSON-LD) describing the business for search engines. Built
+// from site.ts so it always matches what the site shows. Deliberately an Organization with
+// no street address: the Google Business Profile is a service-area business.
+const siteUrl = `${SITE.url}/`;
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${siteUrl}#organization`,
+      name: SITE.name,
+      legalName: COMPANY.legalName,
+      url: siteUrl,
+      logo: `${SITE.url}/icon-512.png`,
+      description: SITE.tagline,
+      email: SITE.email,
+      telephone: SITE.phoneHref.replace('tel:', ''),
+      areaServed: { '@type': 'Country', name: 'United Kingdom' },
+      identifier: { '@type': 'PropertyValue', propertyID: 'Companies House company number', value: COMPANY.number },
+      sameAs: [COMPANY.companiesHouseUrl, COMPANY.icoRegisterUrl],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${siteUrl}#website`,
+      name: SITE.name,
+      url: siteUrl,
+      publisher: { '@id': `${siteUrl}#organization` },
+    },
+  ],
+};
 ---
 
 <Layout
   title="Independent UK Energy, Water, Solar & Trades Brokerage"
   description="MA Utility Solutions is an independent, whole-of-market UK brokerage helping homeowners and businesses secure better deals on energy, water, solar and trusted trades. Book a free consultation."
 >
+  <!-- JSON-LD is a data block, not executable script, so the CSP's script-src doesn't apply. -->
+  <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
   <!-- Hero -->
   <section class="relative overflow-hidden bg-navy">
     <img
@@ -236,7 +271,7 @@ const faqs = [
         <h2 class="mt-4 text-3xl font-extrabold sm:text-4xl">Common questions</h2>
       </div>
       <div class="mx-auto mt-12 max-w-3xl">
-        <FAQAccordion client:visible items={faqs} />
+        <FAQ items={faqs} />
       </div>
     </div>
   </section>

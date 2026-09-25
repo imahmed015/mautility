@@ -66,6 +66,19 @@ const INITIAL_STATE: FormState = {
 
 const hasContractService = (services: string[]) => services.some((s) => CONTRACT_SERVICES.includes(s));
 
+// On-screen order of validated fields (they match each input's `name`), used to move
+// focus to the first one with an error after a failed submit.
+const FIELD_ORDER: (keyof FormState)[] = [
+  'customerType',
+  'fullName',
+  'email',
+  'phone',
+  'postcode',
+  'services',
+  'concern',
+  'callTime',
+];
+
 function validate(values: FormState): FormErrors {
   const errors: FormErrors = {};
 
@@ -124,6 +137,21 @@ export default function ContactForm() {
   const [submitted, setSubmitted] = useState<Pick<FormState, 'customerType' | 'services'> | null>(null);
   const idPrefix = useId();
   const bookingsUrl = import.meta.env.PUBLIC_BOOKINGS_URL;
+  const formRef = useRef<HTMLFormElement>(null);
+  const focusFirstError = useRef(false);
+
+  // After a failed submit, move focus to the first invalid field. Done after render (not
+  // in handleSubmit) so the error text and aria-describedby link already exist and a
+  // screen reader announces the field together with its error.
+  useEffect(() => {
+    if (!focusFirstError.current) return;
+    focusFirstError.current = false;
+    const first = FIELD_ORDER.find((key) => errors[key]);
+    const el = first ? formRef.current?.elements.namedItem(first) : null;
+    // Radio/checkbox groups come back as a RadioNodeList — focus the first option.
+    const target = el instanceof RadioNodeList ? el[0] : el;
+    if (target instanceof HTMLElement) target.focus();
+  }, [errors]);
   const turnstileRef = useRef<HTMLDivElement>(null);
   const { token: turnstileToken, reset: resetTurnstile } = useTurnstile(
     turnstileRef,
@@ -164,6 +192,7 @@ export default function ContactForm() {
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length > 0) {
+      focusFirstError.current = true;
       return;
     }
 
@@ -246,6 +275,7 @@ export default function ContactForm() {
     // details in the URL and delivering nothing. With JS, handleSubmit's preventDefault()
     // means these are never used.
     <form
+      ref={formRef}
       noValidate
       onSubmit={handleSubmit}
       className="space-y-6"
@@ -412,7 +442,7 @@ export default function ContactForm() {
         </div>
       </div>
 
-      <fieldset>
+      <fieldset aria-describedby={errors.services ? fieldId('services-error') : undefined}>
         <legend className="field-label">
           Services you're interested in <span className="text-amber-ink">*</span>
         </legend>
@@ -442,7 +472,11 @@ export default function ContactForm() {
             );
           })}
         </div>
-        {errors.services && <p className="field-error">{errors.services}</p>}
+        {errors.services && (
+          <p id={fieldId('services-error')} className="field-error">
+            {errors.services}
+          </p>
+        )}
         {values.customerType === 'home' && values.services.includes('Water') && (
           <p className="mt-3 rounded-lg bg-amber/10 px-4 py-3 text-sm leading-relaxed text-navy ring-1 ring-amber/30">
             Just so you know: UK law doesn't allow households to switch water supplier, so our water service is

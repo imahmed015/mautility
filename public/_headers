@@ -9,9 +9,8 @@
 #   dist/, across every page, not just the homepage):
 #     NB/bDmdC... = Navbar.astro's mobile-menu/dropdown/accordion script (author-written, all pages)
 #     QzWFZi+F... = Astro's client:load hydration bootstrap (ContactForm/FeedbackForm)
-#     Ya0pUYrC... = Astro's island props/hydration runtime (homepage, contact, feedback)
-#     Q2BPg90Z... = Astro's client:visible hydration bootstrap (homepage)
-#   The 3 Astro-generated hashes are framework runtime code and WILL change if the
+#     Ya0pUYrC... = Astro's island props/hydration runtime (contact, feedback)
+#   The 2 Astro-generated hashes are framework runtime code and WILL change if the
 #   astro/vite version changes, or if hydration directives (client:load/visible/idle)
 #   are added/removed/moved between pages — rebuild and recompute if inline scripts
 #   start getting blocked again. To regenerate: build the site, then for each unique
@@ -20,6 +19,9 @@
 # - Cloudflare Turnstile (spam protection on ContactForm.tsx / FeedbackForm.tsx) needs
 #   its script, iframe and verification XHR allowlisted: script-src, frame-src and
 #   connect-src all include https://challenges.cloudflare.com.
+# - Cloudflare Web Analytics (cookieless; enabled in the Pages dashboard, which injects
+#   the beacon): script-src allows https://static.cloudflareinsights.com and connect-src
+#   allows https://cloudflareinsights.com, where the beacon reports.
 #
 # Strict-Transport-Security: tells browsers to only ever use HTTPS for this domain for a
 # year. Deliberately no includeSubDomains/preload — both are hard to undo, and
@@ -31,9 +33,15 @@
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: geolocation=(), camera=(), microphone=()
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-NB/bDmdCHo5gX3bYjEyMPVsT9i3B9u5hMjf7uX/hI5c=' 'sha256-QzWFZi+FLIx23tnm9SBU4aEgx4x8DsuASP07mfqol/c=' 'sha256-Ya0pUYrC7nM5Cn/056TyVuEiz6dFGrzmkWzgON0pF0U=' 'sha256-Q2BPg90ZMplYY+FSdApNErhpWafg2hcRRbndmvxuL/Q=' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://api.web3forms.com https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; form-action 'self' https://api.web3forms.com; base-uri 'self'; object-src 'none'; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-NB/bDmdCHo5gX3bYjEyMPVsT9i3B9u5hMjf7uX/hI5c=' 'sha256-QzWFZi+FLIx23tnm9SBU4aEgx4x8DsuASP07mfqol/c=' 'sha256-Ya0pUYrC7nM5Cn/056TyVuEiz6dFGrzmkWzgON0pF0U=' https://challenges.cloudflare.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://api.web3forms.com https://challenges.cloudflare.com https://cloudflareinsights.com; frame-src https://challenges.cloudflare.com; form-action 'self' https://api.web3forms.com; base-uri 'self'; object-src 'none'; frame-ancestors 'none'
 
 # Certificate PDFs: keep them out of search results as standalone documents (visitors can
 # still open them from the site's links). Listed explicitly rather than with a wildcard.
 /dro-cert.pdf
   X-Robots-Tag: noindex
+
+# Hashed build assets (JS, CSS, fonts): their filenames change whenever their content
+# does, so they can be cached for a year without ever serving a stale copy. (Unhashed
+# files like the hero photos keep Cloudflare's default short cache.)
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable

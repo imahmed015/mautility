@@ -99,7 +99,7 @@ const lastUpdated = 'September 2026';
           <ul class="mt-3 list-disc space-y-1.5 pl-5">
             <li><strong class="text-navy">Form processing service (Web3Forms)</strong> — used to route enquiry and feedback form submissions to us.</li>
             <li><strong class="text-navy">Microsoft 365</strong> — used for email and, for business customers, appointment booking via Microsoft Bookings.</li>
-            <li><strong class="text-navy">Cloudflare</strong> — our website hosting and content delivery provider.</li>
+            <li><strong class="text-navy">Cloudflare</strong> — our website hosting and content delivery provider. We also use Cloudflare Web Analytics to count visits and measure how quickly our pages load (see section 5).</li>
             <li><strong class="text-navy">Cloudflare Turnstile</strong> — spam protection on our contact and feedback forms. It checks that a real person, not an automated bot, is submitting the form, using technical information from your browser and device such as your IP address.</li>
             <li><strong class="text-navy">Energy, water and solar suppliers</strong> — only where you have authorised us to act on your behalf (e.g. via a Letter of Authority), and only to the extent needed to obtain comparisons or process a switch.</li>
           </ul>
@@ -114,11 +114,21 @@ const lastUpdated = 'September 2026';
         <div>
           <h2 class="text-xl font-extrabold text-navy sm:text-2xl">5. Cookies and external resources</h2>
           <p class="mt-3">
-            Our website keeps things simple: we do not use analytics or advertising cookies, and we do not track you
-            across other websites. Everything on our pages — including fonts — is served from our own website, with
-            one exception: <strong class="text-navy">Cloudflare Turnstile</strong> loads on our contact and feedback
-            pages only, to protect the forms from spam (see section 4).
+            Our website keeps things simple: we do not use cookies for analytics or advertising, and we do not track
+            you across other websites. Everything on our pages — including fonts — is served from our own website,
+            apart from two Cloudflare services:
           </p>
+          <ul class="mt-3 list-disc space-y-1.5 pl-5">
+            <li>
+              <strong class="text-navy">Cloudflare Web Analytics</strong> — on every page, to count visits and
+              measure page speed. It doesn't use cookies or build a profile of you; it processes limited technical
+              information (such as your IP address, browser and the page you visited) to produce overall statistics.
+            </li>
+            <li>
+              <strong class="text-navy">Cloudflare Turnstile</strong> — on our contact and feedback pages only, to
+              protect the forms from spam (see section 4).
+            </li>
+          </ul>
         </div>
 
         <div>

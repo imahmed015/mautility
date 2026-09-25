@@ -17,6 +17,9 @@ interface Props {
 const { title, description, noindex = false } = Astro.props;
 const pageTitle = title.includes(SITE.name) ? title : `${title} | ${SITE.name}`;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+// Social share card (1200x630) shown when a page is linked on WhatsApp, LinkedIn, etc.
+const ogImageURL = new URL('/og-image.jpg', Astro.site);
+const ogImageAlt = `${SITE.name} — independent, whole-of-market brokerage for energy, water, solar and trades`;
 ---
 
 <!doctype html>
@@ -35,9 +38,16 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogImageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
 
     <!-- Favicons -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -46,9 +56,10 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta name="theme-color" content="#0A1F44" />
 
     <!-- Preload the Latin subset of the self-hosted Inter font (the one every page uses) so
-         text renders in the right font sooner. This site loads no external resources on
-         every page; Cloudflare Turnstile loads only on the contact and feedback pages
-         (disclosed in the privacy policy — update it if that changes). -->
+         text renders in the right font sooner. External resources: the Cloudflare Web
+         Analytics beacon (injected on every page by Cloudflare Pages, not by this code) and
+         Cloudflare Turnstile (contact and feedback pages only). Both are allowed in the CSP
+         in public/_headers and disclosed in the privacy policy — update both if this changes. -->
     <link rel="preload" href={interLatinWoff2} as="font" type="font/woff2" crossorigin />
 
 
