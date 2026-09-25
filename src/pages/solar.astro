@@ -2,6 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import CTABanner from '../components/CTABanner.astro';
 import Icon, { type IconName } from '../components/Icon.astro';
+import { Picture } from 'astro:assets';
+import solarHero from '../assets/images/solar-hero.jpg';
 
 // Pre-ticks this service on the contact form (see ContactForm.tsx).
 const contactHref = '/contact?service=Solar';
@@ -54,8 +56,13 @@ const whyItems: { title: string; description: string; icon: IconName }[] = [
   description="Independent guidance on solar installation, financing options, battery storage and realistic ROI — for homeowners and businesses across the UK. Book a free consultation."
 >
   <section class="relative overflow-hidden bg-navy">
-    <img
-      src="/solar-hero.jpg"
+    <!-- Responsive AVIF/WebP + JPEG fallback; see index.astro. Original is 1400px wide. -->
+    <Picture
+      src={solarHero}
+      formats={['avif', 'webp']}
+      fallbackFormat="jpg"
+      widths={[640, 960, 1400]}
+      sizes="100vw"
       alt="Solar panels installed on a UK residential rooftop"
       class="absolute inset-0 h-full w-full object-cover"
       loading="eager"

@@ -4,6 +4,8 @@ import CTABanner from '../components/CTABanner.astro';
 import FAQ from '../components/FAQ.astro';
 import { SITE, COMPANY } from '../data/site';
 import Icon, { type IconName } from '../components/Icon.astro';
+import { Picture } from 'astro:assets';
+import homeHero from '../assets/images/home-hero.jpg';
 
 // "For your home / For your business" chooser under the hero, so visitors see only the
 // services that apply to them (households can't switch water) and the right next step.
@@ -175,8 +177,15 @@ const structuredData = {
 
   <!-- Hero -->
   <section class="relative overflow-hidden bg-navy">
-    <img
-      src="/home-hero.jpg"
+    <!-- Astro generates AVIF/WebP at each width at build time, with a JPEG fallback (it
+         defaults to PNG, far heavier for photos); widths stop at the original's 1342px
+         since images can't be scaled up. -->
+    <Picture
+      src={homeHero}
+      formats={['avif', 'webp']}
+      fallbackFormat="jpg"
+      widths={[640, 960, 1342]}
+      sizes="100vw"
       alt="Installer's gloved hands fitting solar panels on a rooftop"
       class="absolute inset-0 h-full w-full object-cover"
       loading="eager"
