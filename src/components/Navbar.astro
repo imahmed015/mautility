@@ -1,5 +1,5 @@
 ---
-import { PRIMARY_NAV, type NavLink } from '../data/site';
+import { PRIMARY_NAV, SITE, type NavLink } from '../data/site';
 import Icon from './Icon.astro';
 
 const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
@@ -86,6 +86,14 @@ function slug(label: string) {
           )
         }
       </ul>
+      {/* Phone only from lg up — at md widths it would crowd the nav links. */}
+      <a
+        href={SITE.phoneHref}
+        class="hidden items-center gap-1.5 text-sm font-semibold text-navy transition hover:text-amber-ink lg:inline-flex"
+      >
+        <Icon name="phone" class="h-4 w-4 text-amber-dark" />
+        {SITE.phone}
+      </a>
       <a href="/contact" class="btn-primary">Get in Touch</a>
     </div>
 
@@ -158,6 +166,15 @@ function slug(label: string) {
           )
         )
       }
+      <li>
+        <a
+          href={SITE.phoneHref}
+          class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-base font-semibold text-navy transition hover:bg-navy/5"
+        >
+          <Icon name="phone" class="h-5 w-5 text-amber-dark" />
+          Call {SITE.phone}
+        </a>
+      </li>
       <li class="pt-2">
         <a href="/contact" class="btn-primary w-full">Get in Touch</a>
       </li>

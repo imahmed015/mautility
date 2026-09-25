@@ -38,10 +38,10 @@ const year = new Date().getFullYear();
       <h2 class="text-sm font-bold uppercase tracking-wide text-amber">Contact</h2>
       <ul class="mt-4 space-y-2.5 text-sm text-white/75">
         <li>
-          <a href={`mailto:${SITE.email}`} class="transition hover:text-white">{SITE.email}</a>
+          <a href={SITE.phoneHref} class="transition hover:text-white">{SITE.phone}</a>
         </li>
         <li>
-          <a href={SITE.url} class="transition hover:text-white">{SITE.url.replace('https://', '')}</a>
+          <a href={`mailto:${SITE.email}`} class="transition hover:text-white">{SITE.email}</a>
         </li>
       </ul>
     </div>
