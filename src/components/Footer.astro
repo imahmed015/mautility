@@ -1,6 +1,12 @@
 ---
 import { SITE, COMPANY, FOOTER_PAGES, COMPLIANCE_LINKS } from '../data/site';
+import { getGuides } from '../lib/guides';
 import Credentials from './Credentials.astro';
+
+// Same rule as the navbar: list "Guides" (before Contact) only once one is published.
+const footerPages = (await getGuides()).length
+  ? FOOTER_PAGES.flatMap((page) => (page.href === '/contact' ? [{ label: 'Guides', href: '/guides/' }, page] : [page]))
+  : FOOTER_PAGES;
 
 const year = new Date().getFullYear();
 ---
@@ -23,7 +29,7 @@ const year = new Date().getFullYear();
       <h2 class="text-sm font-bold uppercase tracking-wide text-amber">Pages</h2>
       <ul class="mt-4 space-y-2.5">
         {
-          FOOTER_PAGES.map((item) => (
+          footerPages.map((item) => (
             <li>
               <a href={item.href} class="text-sm text-white/75 transition hover:text-white">
                 {item.label}

@@ -1,0 +1,54 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import CTABanner from '../../components/CTABanner.astro';
+import { getGuides, AUDIENCE_LABELS } from '../../lib/guides';
+
+const guides = await getGuides();
+---
+
+<Layout
+  title="Guides"
+  description="Plain-English guides to business energy renewals, Letters of Authority, business water switching and more — so you know your options before you talk to anyone."
+  noindex={guides.length === 0}
+>
+  <section class="bg-navy">
+    <div class="container-page section-padding text-center">
+      <span class="eyebrow-inverse">Guides</span>
+      <h1 class="mx-auto mt-5 max-w-3xl text-4xl font-extrabold text-white sm:text-5xl">Know your options first</h1>
+      <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/75">
+        Plain-English explainers on contracts, renewals and switching — general information to help you understand
+        where you stand. No prices, no sales pitch.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-padding">
+    <div class="container-page">
+      {
+        guides.length === 0 ? (
+          <p class="text-center text-ink-light">Guides are coming soon.</p>
+        ) : (
+          <div class="grid gap-6 md:grid-cols-2">
+            {guides.map((guide) => (
+              <a href={`/guides/${guide.id}/`} class="card group flex flex-col transition hover:shadow-card-hover">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="chip text-xs">{AUDIENCE_LABELS[guide.data.audience]}</span>
+                  {guide.data.draft && (
+                    <span class="rounded-full bg-red-50 px-3 py-1 text-xs font-bold uppercase text-red-700 ring-1 ring-red-200">
+                      Draft
+                    </span>
+                  )}
+                </div>
+                <h2 class="mt-4 text-xl font-bold text-navy">{guide.data.title}</h2>
+                <p class="mt-2 flex-1 text-sm leading-relaxed text-ink-light">{guide.data.description}</p>
+                <span class="mt-5 text-sm font-bold text-amber-ink">Read the guide →</span>
+              </a>
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <CTABanner />
+</Layout>
