@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import CTABanner from '../components/CTABanner.astro';
 import Icon, { type IconName } from '../components/Icon.astro';
+import RenewalHelper from '../components/RenewalHelper.astro';
 
 // Pre-ticks these services on the contact form. Water is left out on purpose: it is
 // business-only, and this CTA is also used by households.
@@ -120,6 +121,12 @@ const brokerReasons: { title: string; description: string; icon: IconName }[] = 
         class="mt-8 h-56 w-full rounded-2xl object-cover shadow-card sm:h-72 lg:h-80"
         loading="lazy"
       />
+    </div>
+  </section>
+
+  <section class="pb-14 sm:pb-20 lg:pb-24">
+    <div class="container-page">
+      <RenewalHelper />
     </div>
   </section>
 
