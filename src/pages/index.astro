@@ -5,6 +5,48 @@ import FAQ from '../components/FAQ.astro';
 import { SITE, COMPANY } from '../data/site';
 import Icon, { type IconName } from '../components/Icon.astro';
 
+// "For your home / For your business" chooser under the hero, so visitors see only the
+// services that apply to them (households can't switch water) and the right next step.
+// Businesses go straight to Microsoft Bookings (as on /contact), with the form as a
+// fallback; ?type= pre-selects home/business on the contact form.
+const bookingsUrl = import.meta.env.PUBLIC_BOOKINGS_URL;
+type AudienceLink = { label: string; href: string; external?: boolean };
+const audiences: {
+  title: string;
+  intro: string;
+  items: { label: string; href: string; icon: IconName }[];
+  note?: string;
+  primary: AudienceLink;
+  secondary?: AudienceLink;
+}[] = [
+  {
+    title: 'For your home',
+    intro: 'Homeowners and tenants',
+    items: [
+      { label: 'Electricity & gas', href: '/utilities', icon: 'bolt' },
+      { label: 'Solar & battery storage', href: '/solar', icon: 'sun' },
+      { label: 'Trades for repairs & renovations', href: '/fixtures', icon: 'wrench' },
+    ],
+    note: "UK law doesn't let households switch water supplier, so our water service is for businesses only.",
+    primary: { label: 'Book a Free Consultation', href: '/contact?type=home' },
+  },
+  {
+    title: 'For your business',
+    intro: 'Sole traders, SMEs and multi-site businesses',
+    items: [
+      { label: 'Electricity & gas', href: '/utilities', icon: 'bolt' },
+      { label: 'Business water', href: '/utilities', icon: 'water' },
+      { label: 'Solar', href: '/solar', icon: 'sun' },
+      { label: 'Fit-outs, repairs & compliance work', href: '/fixtures', icon: 'wrench' },
+      { label: 'Multi-site management', href: '/utilities', icon: 'building' },
+    ],
+    primary: bookingsUrl
+      ? { label: 'Book a Free Consultation', href: bookingsUrl, external: true }
+      : { label: 'Book a Free Consultation', href: '/contact?type=business' },
+    secondary: bookingsUrl ? { label: 'or send us an enquiry', href: '/contact?type=business' } : undefined,
+  },
+];
+
 const services: { name: string; href: string; description: string; icon: IconName }[] = [
   {
     name: 'Solar',
@@ -182,6 +224,53 @@ const structuredData = {
             <dd class="mt-1 text-3xl font-extrabold text-amber">None</dd>
           </div>
         </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- Who we help: home vs business -->
+  <section class="pt-14 sm:pt-20 lg:pt-24">
+    <div class="container-page">
+      <div class="mx-auto max-w-2xl text-center">
+        <span class="eyebrow">Who we help</span>
+        <h2 class="mt-4 text-3xl font-extrabold sm:text-4xl">Start with who it's for</h2>
+      </div>
+      <div class="mt-10 grid gap-6 md:grid-cols-2">
+        {
+          audiences.map((audience) => (
+            <div class="card flex flex-col">
+              <h3 class="text-2xl font-extrabold text-navy">{audience.title}</h3>
+              <p class="mt-1 text-sm text-ink-light">{audience.intro}</p>
+              <ul class="mt-6 space-y-3">
+                {audience.items.map((item) => (
+                  <li>
+                    <a href={item.href} class="group flex items-center gap-3 text-sm font-semibold text-navy hover:text-amber-ink">
+                      <span class="inline-flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-amber/15 text-amber-dark">
+                        <Icon name={item.icon} class="h-5 w-5" />
+                      </span>
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              {audience.note && <p class="mt-5 text-xs leading-relaxed text-ink-light">{audience.note}</p>}
+              <div class="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 pt-8">
+                <a
+                  href={audience.primary.href}
+                  class="btn-primary"
+                  {...(audience.primary.external && { target: '_blank', rel: 'noopener noreferrer' })}
+                >
+                  {audience.primary.label}
+                </a>
+                {audience.secondary && (
+                  <a href={audience.secondary.href} class="text-sm font-semibold text-navy underline hover:text-amber-ink">
+                    {audience.secondary.label}
+                  </a>
+                )}
+              </div>
+            </div>
+          ))
+        }
       </div>
     </div>
   </section>

@@ -158,15 +158,25 @@ export default function ContactForm() {
     import.meta.env.PUBLIC_TURNSTILE_SITE_KEY,
   );
 
-  // Pre-tick services passed from a service page's CTA, e.g. /contact?service=Solar or
-  // ?service=Electricity,Gas. Runs after hydration (not in initial state) so the server-
-  // rendered HTML and React's first render match. Unknown names are ignored.
+  // Pre-fill from the link that brought the visitor here: ?service=Solar (or a comma list,
+  // from a service page's CTA) pre-ticks services, and ?type=home|business (from the
+  // homepage's "For your home / business" cards) pre-selects the customer type. Runs after
+  // hydration (not in initial state) so the server-rendered HTML and React's first render
+  // match. Unknown values are ignored.
   useEffect(() => {
-    const requested = new URLSearchParams(window.location.search).get('service');
-    if (!requested) return;
-    const wanted = requested.split(',').map((s) => s.trim().toLowerCase());
+    const params = new URLSearchParams(window.location.search);
+    const requested = params.get('service');
+    const wanted = requested ? requested.split(',').map((s) => s.trim().toLowerCase()) : [];
     const services = SERVICE_OPTIONS.filter((option) => wanted.includes(option.toLowerCase()));
-    if (services.length) setValues((prev) => ({ ...prev, services }));
+    const type = params.get('type');
+    const customerType = type === 'home' || type === 'business' ? type : undefined;
+    if (services.length || customerType) {
+      setValues((prev) => ({
+        ...prev,
+        ...(services.length && { services }),
+        ...(customerType && { customerType }),
+      }));
+    }
   }, []);
 
   const setField = <K extends keyof FormState>(key: K, value: FormState[K]) => {
