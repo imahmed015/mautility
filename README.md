@@ -104,6 +104,8 @@ Then in Cloudflare Pages, choose **Upload assets** and upload the contents of `d
 src/
   components/       Shared Astro components + React islands (forms, accordion);
                     Icon.astro is the single icon library, Credentials.astro the trust strip
+  assets/images/     Page photos (licensed). Used via <Picture> from astro:assets, which
+                    builds AVIF/WebP at several widths — keep originals large (1600px+)
   hooks/             React hooks (useTurnstile.ts)
   content/guides/    Guide articles (Markdown) — see "Publishing a guide" below
   lib/guides.ts      Which guides are visible (drafts in dev only) — used by pages, nav, sitemap
@@ -114,7 +116,7 @@ src/
   styles/global.css  Tailwind + design-system utility classes (.btn-primary, .card, etc.)
 public/
   favicon.svg, favicon-32x32.png, apple-touch-icon.png, icon-512.png
-  *-hero.jpg, utilities-secondary.jpg   Page photos (licensed)
+  og-image.jpg      Social share card (1200x630)
   dro-badge.png, dro-cert.pdf   DRO accreditation artwork/certificate
   robots.txt, _headers    (sitemap.xml is generated — see src/pages/sitemap.xml.ts)
 ```
