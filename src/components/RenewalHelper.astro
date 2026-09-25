@@ -1,0 +1,125 @@
+---
+// "When should I look at my renewal?" — pick the month your energy contract ends and get
+// plain guidance on timing. Runs entirely in the browser: nothing entered is sent anywhere
+// (no personal data, no privacy-policy impact).
+//
+// Compliance: this informs, it never quotes — no prices, rates or savings figures. The
+// "about six months ahead" rule of thumb matches the business energy renewals guide.
+const MONTHS = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December',
+];
+---
+
+<div class="card" data-renewal-helper>
+  <h2 class="text-2xl font-extrabold text-navy">When should I look at my renewal?</h2>
+  <p class="mt-2 text-sm leading-relaxed text-ink-light">
+    Pick the month your current electricity or gas contract ends and we'll tell you where you stand.
+  </p>
+
+  <div class="mt-6 grid gap-4 sm:max-w-md sm:grid-cols-2">
+    <div>
+      <label for="renewal-month" class="field-label">Month it ends</label>
+      <select id="renewal-month" class="field-input" data-renewal-month>
+        <option value="">Select…</option>
+        {MONTHS.map((month, index) => <option value={index}>{month}</option>)}
+      </select>
+    </div>
+    <div>
+      <label for="renewal-year" class="field-label">Year</label>
+      {/* Options are filled in by the script from today's date, so they never go stale. */}
+      <select id="renewal-year" class="field-input" data-renewal-year>
+        <option value="">Select…</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="mt-6" role="status" aria-live="polite" data-renewal-result></div>
+
+  <p class="mt-6 text-xs leading-relaxed text-ink-light">
+    General guidance only — contracts and notice periods vary, so check yours or ask us. This runs in your browser;
+    nothing you select is sent to us.
+  </p>
+</div>
+
+<script>
+  const MONTHS = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December',
+  ];
+
+  document.querySelectorAll<HTMLElement>('[data-renewal-helper]').forEach((root) => {
+    const monthSelect = root.querySelector<HTMLSelectElement>('[data-renewal-month]');
+    const yearSelect = root.querySelector<HTMLSelectElement>('[data-renewal-year]');
+    const result = root.querySelector<HTMLElement>('[data-renewal-result]');
+    if (!monthSelect || !yearSelect || !result) return;
+
+    const now = new Date();
+    for (let year = now.getFullYear() - 1; year <= now.getFullYear() + 4; year++) {
+      yearSelect.add(new Option(String(year), String(year)));
+    }
+
+    const show = (tone: 'urgent' | 'now' | 'early', heading: string, body: string) => {
+      const styles = {
+        urgent: 'bg-red-50 text-red-800 ring-red-200',
+        now: 'bg-green-50 text-green-800 ring-green-200',
+        early: 'bg-navy/5 text-navy ring-navy/10',
+      };
+      result.innerHTML = '';
+      const box = document.createElement('div');
+      box.className = `rounded-xl px-5 py-4 text-sm leading-relaxed ring-1 ${styles[tone]}`;
+      const title = document.createElement('p');
+      title.className = 'font-bold';
+      title.textContent = heading;
+      const text = document.createElement('p');
+      text.className = 'mt-1';
+      text.textContent = body;
+      const link = document.createElement('a');
+      link.href = '/contact/?service=Electricity,Gas';
+      link.className = 'mt-3 inline-block font-semibold underline';
+      link.textContent = 'Book a free consultation';
+      box.append(title, text, link);
+      result.append(box);
+    };
+
+    const update = () => {
+      if (monthSelect.value === '' || yearSelect.value === '') {
+        result.innerHTML = '';
+        return;
+      }
+      const endMonth = Number(monthSelect.value);
+      const endYear = Number(yearSelect.value);
+      const monthsLeft = (endYear - now.getFullYear()) * 12 + (endMonth - now.getMonth());
+
+      if (monthsLeft < 0) {
+        show(
+          'urgent',
+          'Your contract may already have ended.',
+          "If you haven't agreed a new one, you could be on out-of-contract rates now — usually much higher than a fixed contract. It's worth sorting as soon as possible.",
+        );
+      } else if (monthsLeft <= 2) {
+        show(
+          'urgent',
+          'Your renewal is close — act now.',
+          'With under three months to go, check your notice period straight away so you avoid an automatic rollover or out-of-contract rates.',
+        );
+      } else if (monthsLeft <= 6) {
+        show(
+          'now',
+          "You're in the ideal window to review.",
+          'Most suppliers will let you agree your next contract now, which gives time to compare properly before anything rolls over.',
+        );
+      } else {
+        const start = new Date(endYear, endMonth - 6, 1);
+        show(
+          'early',
+          `It's a little early — aim to start around ${MONTHS[start.getMonth()]} ${start.getFullYear()}.`,
+          "That's about six months before your contract ends. Put a reminder in your diary, or get in touch and we'll track your renewal date for you.",
+        );
+      }
+    };
+
+    monthSelect.addEventListener('change', update);
+    yearSelect.addEventListener('change', update);
+  });
+</script>
