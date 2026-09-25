@@ -21,6 +21,9 @@ export const COMPANY = {
   registeredOffice: '122 Bushbury Road, Birmingham, B33 9NJ',
   companiesHouseUrl: 'https://find-and-update.company-information.service.gov.uk/company/17283404',
   icoNumber: 'ZC203801',
+  // The ICO's own public register entry — always current (unlike a downloaded certificate,
+  // which goes stale at each annual renewal) and offers the official certificate download.
+  icoRegisterUrl: 'https://ico.org.uk/ESDWebPages/Entry/ZC203801',
 };
 
 // A primary nav entry is either a plain link, or a parent with a nested list of

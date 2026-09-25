@@ -8,8 +8,6 @@ Production website for MA Utility Solutions, an independent UK utility brokerage
 
 ## 1. Prerequisites
 
-This project was built on a machine **without Node.js installed**, so none of the commands below have been run yet. Before doing anything else, install:
-
 - **Node.js 20 LTS or later** — https://nodejs.org (installs `npm` too)
 
 Verify after installing:
@@ -35,8 +33,9 @@ cp .env.example .env
 |---|---|---|
 | `PUBLIC_WEB3FORMS_ACCESS_KEY` | https://web3forms.com — free, no backend needed. Sign up, verify your destination inbox, copy the access key. | Powers both the Contact and Feedback forms. |
 | `PUBLIC_BOOKINGS_URL` | Microsoft Bookings → your booking page → **Share** → copy the public booking link. | Used by the Business/SME "Book a Free Consultation" button on `/contact`. |
+| `PUBLIC_TURNSTILE_SITE_KEY` | Cloudflare dashboard → **Turnstile** → your widget → **Site key**. | Spam protection on both forms. The matching **secret** key goes in the Web3Forms dashboard (which verifies tokens server-side), never in this repo. If unset, the widget simply isn't rendered. |
 
-Both variables are prefixed `PUBLIC_` because Astro only exposes `PUBLIC_`-prefixed env vars to client-side code (the React islands run in the browser). Neither value is a secret that needs hiding server-side — the Web3Forms access key is designed to be used client-side and is domain-restrictable from the Web3Forms dashboard.
+All variables are prefixed `PUBLIC_` because Astro only exposes `PUBLIC_`-prefixed env vars to client-side code (the React islands run in the browser). None is a secret that needs hiding server-side — the Web3Forms access key is designed to be used client-side and is domain-restrictable from the Web3Forms dashboard, and a Turnstile site key is public by design. They're baked in at **build** time, so changing one in Cloudflare needs a redeploy to take effect.
 
 ## 3. Local development
 
@@ -70,7 +69,7 @@ npm run preview
    - **Framework preset:** Astro
    - **Build command:** `npm run build`
    - **Build output directory:** `dist`
-4. Add the two environment variables (`PUBLIC_WEB3FORMS_ACCESS_KEY`, `PUBLIC_BOOKINGS_URL`) under **Settings → Environment variables** for both Production and Preview.
+4. Add the three environment variables (`PUBLIC_WEB3FORMS_ACCESS_KEY`, `PUBLIC_BOOKINGS_URL`, `PUBLIC_TURNSTILE_SITE_KEY`) under **Settings → Environment variables** for both Production and Preview.
 5. Deploy. Cloudflare will rebuild automatically on every push.
 
 **Option B — Direct upload:**
@@ -87,8 +86,9 @@ Then in Cloudflare Pages, choose **Upload assets** and upload the contents of `d
 
 - [x] Set real `PUBLIC_WEB3FORMS_ACCESS_KEY` — set in `.env` (local) and Cloudflare → Settings → Variables and secrets (Production + Preview). ⚠️ Still confirm the domain-restriction step *inside the Web3Forms dashboard itself* (Settings → restrict key to `mautilitysolutions.co.uk`) — that's a Web3Forms-side setting, not something in this repo.
 - [x] Set real `PUBLIC_BOOKINGS_URL` — set in `.env` and Cloudflare (Production + Preview); verified live on `/contact` (opens the real Microsoft Bookings page, no login required).
-- [x] Cloudflare Turnstile is implemented — wired into both [`ContactForm.tsx`](src/components/ContactForm.tsx) and [`FeedbackForm.tsx`](src/components/FeedbackForm.tsx) via [`src/hooks/useTurnstile.ts`](src/hooks/useTurnstile.ts), with matching CSP entries already in `public/_headers`. Confirm `PUBLIC_TURNSTILE_SITE_KEY` in `.env` is your real production key before deploying.
-- [ ] Once ADR (e.g. Dispute Resolution Ombudsman) accreditation is confirmed, flip `ENABLED = true` in [`src/components/AdrBadge.astro`](src/components/AdrBadge.astro) and supply the badge artwork + verification link. It's referenced once, on `/complaints`.
+- [x] Cloudflare Turnstile is implemented — wired into both [`ContactForm.tsx`](src/components/ContactForm.tsx) and [`FeedbackForm.tsx`](src/components/FeedbackForm.tsx) via [`src/hooks/useTurnstile.ts`](src/hooks/useTurnstile.ts), with matching CSP entries in `public/_headers`. Verified rendering on production (September 2026).
+- [x] ADR accreditation — DRO membership confirmed (Member E3593). [`AdrBadge.astro`](src/components/AdrBadge.astro) is enabled with the DRO artwork (`public/dro-badge.png`) on `/complaints`; the DRO certificate (`public/dro-cert.pdf`, `noindex` via `_headers`) and the ICO's public register entry (`COMPANY.icoRegisterUrl` in `site.ts`) are linked from `/complaints` and the Credentials strip. ICO registration renews annually (next due July 2027) — the register link stays current automatically.
+- [ ] Add a Cloudflare Redirect Rule sending `www.mautilitysolutions.co.uk` → `https://mautilitysolutions.co.uk` (301). `www` currently serves the site directly (duplicate host) — and if the Turnstile widget's hostname list or the Web3Forms domain restriction only covers the apex, forms fail on `www`. Check the widget on `https://www.mautilitysolutions.co.uk/contact/` until the redirect is in place.
 - [x] Replace the placeholder phone number in [`src/data/site.ts`](src/data/site.ts) (`SITE.phone` / `SITE.phoneHref`) with the real business number — done (`07312 176843`).
 - [ ] Confirm the `admin@mautilitysolutions.co.uk` mailbox in [`src/data/site.ts`](src/data/site.ts) (used for both `email` and `complaintsEmail` — no separate complaints/hello mailbox exists yet) is actively monitored.
 - [ ] Once real, consented feedback exists via `/feedback` (opt-in checkbox ticked), manually add a Testimonials section — none is included by default, by design.
@@ -96,19 +96,24 @@ Then in Cloudflare Pages, choose **Upload assets** and upload the contents of `d
 - [ ] If a page is added or removed later, update `public/sitemap.xml` to match (it's hand-written, not auto-generated — see the note in `astro.config.mjs`).
 - [x] Submit the site to Google Search Console — domain property verified via DNS TXT record (added in Cloudflare DNS), sitemap submitted and accepted.
 - [x] Create a Google Business Profile — set up as a service-area business (no public address), phone-verified, category/description/services filled in.
-- [x] Run `npm audit` and address findings — fixed both high-severity issues (outdated `astro`, `sharp`/libvips CVEs) by upgrading `astro` to `7.2.1` and replacing the unmaintained `@astrojs/tailwind` integration with plain PostCSS. 3 remaining (2 moderate, 1 high) are dev-server-only `esbuild`/`vite` issues via `@astrojs/react` that don't affect the deployed static site.
+- [x] Run `npm audit` and address findings — `npm audit` reports **0 vulnerabilities** as of September 2026, after upgrading `astro` to `7.3.5` and `@astrojs/react` to `7.0.0` (still on React 18). The older `@astrojs/react` 3.x pulled in a second, outdated copy of Vite, which caused the remaining dev-server-only advisories and a broken dev-mode hydration error. Re-run `npm audit` periodically.
 
 ## 7. Project structure
 
 ```
 src/
-  components/       Shared Astro components + React islands (forms, accordion)
-  data/site.ts       Central content: nav links, footer links, trades list, contact details
+  components/       Shared Astro components + React islands (forms, accordion);
+                    Icon.astro is the single icon library, Credentials.astro the trust strip
+  hooks/             React hooks (useTurnstile.ts)
+  data/site.ts       Central content: nav links, footer links, trades list, contact details,
+                    statutory company details (COMPANY)
   layouts/Layout.astro  Global <head>, SEO meta, Navbar/Footer wrapper
   pages/             One .astro file per route (10 pages + 404)
   styles/global.css  Tailwind + design-system utility classes (.btn-primary, .card, etc.)
 public/
   favicon.svg, favicon-32x32.png, apple-touch-icon.png, icon-512.png
+  *-hero.jpg, utilities-secondary.jpg   Page photos (licensed)
+  dro-badge.png, dro-cert.pdf   DRO accreditation artwork/certificate
   robots.txt, sitemap.xml, _headers
 ```
 
@@ -120,7 +125,7 @@ Colours, font and spacing scale live in [`tailwind.config.mjs`](tailwind.config.
 
 ## 9. Compliance notes baked into the build
 
-- No page uses "Get a Free Quote" language — every CTA says **"Book a Free Consultation"**, reflecting the LOA-first business model.
+- No page uses "Get a Free Quote" (or any "quote") language, reflecting the LOA-first business model. Page CTAs say **"Book a Free Consultation"**; the navbar uses the shorter **"Get in Touch"** and the 404 page **"Contact us"**.
 - No testimonials/reviews are fabricated anywhere. The only path to a testimonial is a visitor explicitly ticking the opt-in box on `/feedback`.
 - The founder is never named — all copy uses "our founder" or first person.
 - `/utilities` explicitly states UK households cannot switch water suppliers.
