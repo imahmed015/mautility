@@ -93,7 +93,7 @@ Then in Cloudflare Pages, choose **Upload assets** and upload the contents of `d
 - [ ] Confirm the `admin@mautilitysolutions.co.uk` mailbox in [`src/data/site.ts`](src/data/site.ts) (used for both `email` and `complaintsEmail` — no separate complaints/hello mailbox exists yet) is actively monitored.
 - [ ] Once real, consented feedback exists via `/feedback` (opt-in checkbox ticked), manually add a Testimonials section — none is included by default, by design.
 - [x] Verify `sitemap.xml` and `robots.txt` are reachable at the production domain after first deploy — confirmed live: `sitemap.xml` returns 200 with `Content-Type: application/xml` and lists all 10 pages; `robots.txt` correctly points to it.
-- [ ] If a page is added or removed later, update `public/sitemap.xml` to match (it's hand-written, not auto-generated — see the note in `astro.config.mjs`).
+- [x] Sitemap is generated at build time by [`src/pages/sitemap.xml.ts`](src/pages/sitemap.xml.ts) from `src/pages` plus published guides — adding or removing a page needs no sitemap edit.
 - [x] Submit the site to Google Search Console — domain property verified via DNS TXT record (added in Cloudflare DNS), sitemap submitted and accepted.
 - [x] Create a Google Business Profile — set up as a service-area business (no public address), phone-verified, category/description/services filled in.
 - [x] Run `npm audit` and address findings — `npm audit` reports **0 vulnerabilities** as of September 2026, after upgrading `astro` to `7.3.5` and `@astrojs/react` to `7.0.0` (still on React 18). The older `@astrojs/react` 3.x pulled in a second, outdated copy of Vite, which caused the remaining dev-server-only advisories and a broken dev-mode hydration error. Re-run `npm audit` periodically.
@@ -105,6 +105,8 @@ src/
   components/       Shared Astro components + React islands (forms, accordion);
                     Icon.astro is the single icon library, Credentials.astro the trust strip
   hooks/             React hooks (useTurnstile.ts)
+  content/guides/    Guide articles (Markdown) — see "Publishing a guide" below
+  lib/guides.ts      Which guides are visible (drafts in dev only) — used by pages, nav, sitemap
   data/site.ts       Central content: nav links, footer links, trades list, contact details,
                     statutory company details (COMPANY)
   layouts/Layout.astro  Global <head>, SEO meta, Navbar/Footer wrapper
@@ -114,8 +116,16 @@ public/
   favicon.svg, favicon-32x32.png, apple-touch-icon.png, icon-512.png
   *-hero.jpg, utilities-secondary.jpg   Page photos (licensed)
   dro-badge.png, dro-cert.pdf   DRO accreditation artwork/certificate
-  robots.txt, sitemap.xml, _headers
+  robots.txt, _headers    (sitemap.xml is generated — see src/pages/sitemap.xml.ts)
 ```
+
+### Publishing a guide
+
+Guides are Markdown files in `src/content/guides/`; the file name becomes the URL (`letter-of-authority.md` → `/guides/letter-of-authority/`). New guides start with `draft: true`: they appear in `npm run dev` (with a "Draft" badge) so you can review them, but are never included in a production build.
+
+To publish, set `draft: false` (and update `updated:`), commit and push. The guide then appears on `/guides/` and in the sitemap, and the "Guides" link is added to the navbar and footer automatically once at least one guide is published.
+
+Guides inform — they never quote. No prices, price ranges or savings figures.
 
 ## 8. Design tokens
 

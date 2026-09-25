@@ -95,6 +95,32 @@
     @apply inline-flex items-center rounded-full bg-amber/15 px-3 py-1 text-xs font-bold uppercase tracking-wide text-amber;
   }
 
+  /* Body text of guides (Markdown rendered from src/content/guides). */
+  .guide-content {
+    @apply text-base leading-relaxed text-ink-light;
+  }
+  .guide-content > * + * {
+    @apply mt-5;
+  }
+  .guide-content h2 {
+    @apply mt-10 text-2xl font-extrabold text-navy;
+  }
+  .guide-content h3 {
+    @apply mt-8 text-lg font-bold text-navy;
+  }
+  .guide-content ul {
+    @apply list-disc space-y-2 pl-5;
+  }
+  .guide-content ol {
+    @apply list-decimal space-y-2 pl-5;
+  }
+  .guide-content a {
+    @apply font-semibold text-amber-ink underline hover:text-navy;
+  }
+  .guide-content strong {
+    @apply font-semibold text-navy;
+  }
+
   .field-label {
     @apply mb-1.5 block text-sm font-semibold text-navy;
   }

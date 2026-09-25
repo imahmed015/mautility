@@ -1,6 +1,13 @@
 ---
-import { PRIMARY_NAV, SITE, type NavLink } from '../data/site';
+import { PRIMARY_NAV, SITE, type NavItem, type NavLink } from '../data/site';
+import { getGuides } from '../lib/guides';
 import Icon from './Icon.astro';
+
+// "Guides" joins the nav automatically once at least one guide is published (drafts only
+// count in `npm run dev`), so there's never a nav link to an empty section.
+const navItems: NavItem[] = (await getGuides()).length
+  ? [...PRIMARY_NAV, { label: 'Guides', href: '/guides/' }]
+  : PRIMARY_NAV;
 
 const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 
@@ -29,7 +36,7 @@ function slug(label: string) {
     <div class="hidden items-center gap-8 md:flex">
       <ul class="flex items-center gap-7">
         {
-          PRIMARY_NAV.map((item) =>
+          navItems.map((item) =>
             'children' in item ? (
               <li class="relative">
                 <button
@@ -117,7 +124,7 @@ function slug(label: string) {
   <div id="mobile-menu" class="hidden border-t border-navy/10 bg-surface md:hidden">
     <ul class="container-page flex flex-col gap-1 py-4">
       {
-        PRIMARY_NAV.map((item) =>
+        navItems.map((item) =>
           'children' in item ? (
             <li>
               <button
