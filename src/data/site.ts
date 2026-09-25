@@ -11,6 +11,18 @@ export const SITE = {
   tagline: 'Independent whole-of-market brokerage for energy, water, solar and trades.',
 };
 
+// Statutory company details. UK law requires a limited company's website to show its
+// registered name, where it's registered, its company number and registered office —
+// keep these matching Companies House exactly.
+export const COMPANY = {
+  legalName: 'MA Utility Solutions Ltd',
+  registeredIn: 'England & Wales',
+  number: '17283404',
+  registeredOffice: '122 Bushbury Road, Birmingham, B33 9NJ',
+  companiesHouseUrl: 'https://find-and-update.company-information.service.gov.uk/company/17283404',
+  icoNumber: 'ZC203801',
+};
+
 // A primary nav entry is either a plain link, or a parent with a nested list of
 // links (rendered as a click-to-open dropdown on desktop / accordion on mobile —
 // see Navbar.astro).

@@ -1,4 +1,4 @@
-import { useEffect, useState, type RefObject } from 'react';
+import { useCallback, useEffect, useRef, useState, type RefObject } from 'react';
 
 // Minimal shape of the global `window.turnstile` API injected by
 // https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit
@@ -6,14 +6,15 @@ declare global {
   interface Window {
     turnstile?: {
       render: (container: HTMLElement, options: Record<string, unknown>) => string;
+      reset: (widgetId: string) => void;
       remove: (widgetId: string) => void;
     };
   }
 }
 
 /**
- * Renders a Cloudflare Turnstile widget into `containerRef` and returns the
- * current response token (or '' until solved).
+ * Renders a Cloudflare Turnstile widget into `containerRef` and returns the current
+ * response token (or '' until solved), plus a `reset` function.
  *
  * Deliberately renders *explicitly* via `window.turnstile.render(...)` inside
  * a `useEffect`, rather than letting the Turnstile script auto-scan the page
@@ -29,17 +30,17 @@ declare global {
  */
 export function useTurnstile(containerRef: RefObject<HTMLDivElement | null>, siteKey: string | undefined) {
   const [token, setToken] = useState('');
+  const widgetIdRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
     if (!siteKey || !containerRef.current) return;
 
     let cancelled = false;
-    let widgetId: string | undefined;
     let pollId: ReturnType<typeof setInterval> | undefined;
 
     const renderWidget = () => {
       if (cancelled || !window.turnstile || !containerRef.current) return;
-      widgetId = window.turnstile.render(containerRef.current, {
+      widgetIdRef.current = window.turnstile.render(containerRef.current, {
         sitekey: siteKey,
         callback: (t: string) => setToken(t),
         'expired-callback': () => setToken(''),
@@ -62,10 +63,19 @@ export function useTurnstile(containerRef: RefObject<HTMLDivElement | null>, sit
     return () => {
       cancelled = true;
       if (pollId) clearInterval(pollId);
-      if (widgetId && window.turnstile) window.turnstile.remove(widgetId);
+      if (widgetIdRef.current && window.turnstile) window.turnstile.remove(widgetIdRef.current);
+      widgetIdRef.current = undefined;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- containerRef identity is stable
   }, [siteKey]);
 
-  return token;
+  // Turnstile tokens are single-use: once a submission has sent one to Web3Forms (which
+  // verifies it server-side), it can't be verified again. Call this after every submit
+  // attempt so a retry, or a second enquiry, gets a fresh token instead of a spent one.
+  const reset = useCallback(() => {
+    setToken('');
+    if (widgetIdRef.current && window.turnstile) window.turnstile.reset(widgetIdRef.current);
+  }, []);
+
+  return { token, reset };
 }

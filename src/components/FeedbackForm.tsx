@@ -1,5 +1,5 @@
 import { useId, useRef, useState, type FormEvent } from 'react';
-import { SERVICE_OPTIONS } from '../data/site';
+import { SERVICE_OPTIONS, SITE } from '../data/site';
 import { useTurnstile } from '../hooks/useTurnstile';
 
 type FormState = {
@@ -61,7 +61,10 @@ export default function FeedbackForm() {
   const [serverMessage, setServerMessage] = useState('');
   const idPrefix = useId();
   const turnstileRef = useRef<HTMLDivElement>(null);
-  const turnstileToken = useTurnstile(turnstileRef, import.meta.env.PUBLIC_TURNSTILE_SITE_KEY);
+  const { token: turnstileToken, reset: resetTurnstile } = useTurnstile(
+    turnstileRef,
+    import.meta.env.PUBLIC_TURNSTILE_SITE_KEY,
+  );
 
   const setField = <K extends keyof FormState>(key: K, value: FormState[K]) => {
     setValues((prev) => ({ ...prev, [key]: value }));
@@ -91,6 +94,16 @@ export default function FeedbackForm() {
 
     if (honeypot) {
       setStatus('success');
+      return;
+    }
+
+    // See ContactForm.tsx — avoid a confusing Web3Forms rejection when the spam check
+    // hasn't produced a token yet.
+    if (import.meta.env.PUBLIC_TURNSTILE_SITE_KEY && !turnstileToken) {
+      setStatus('error');
+      setServerMessage(
+        `Please wait a moment for the security check to finish, then try again. If it keeps happening, email us at ${SITE.email}.`,
+      );
       return;
     }
 
@@ -133,13 +146,25 @@ export default function FeedbackForm() {
     } catch {
       setStatus('error');
       setServerMessage('We could not reach the server. Please check your connection and try again.');
+    } finally {
+      resetTurnstile();
     }
   };
 
   const fieldId = (name: string) => `${idPrefix}-${name}`;
 
   return (
-    <form noValidate onSubmit={handleSubmit} className="space-y-6">
+    // Pre-hydration / no-JS fallback only — see ContactForm.tsx.
+    <form
+      noValidate
+      onSubmit={handleSubmit}
+      className="space-y-6"
+      method="POST"
+      action="https://api.web3forms.com/submit"
+    >
+      <input type="hidden" name="access_key" value={import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY} />
+      <input type="hidden" name="subject" value="New private feedback — MA Utility Solutions website" />
+
       {/* Honeypot field — hidden from real users; left blank by them, but bots tend to fill every field. */}
       <div className="hidden" aria-hidden="true">
         <label htmlFor={fieldId('botcheck')}>Leave this field blank</label>
@@ -297,6 +322,14 @@ export default function FeedbackForm() {
         <button type="submit" disabled={status === 'sending'} className="btn-primary w-full sm:w-auto">
           {status === 'sending' ? 'Sending…' : 'Submit feedback'}
         </button>
+        <p className="mt-3 text-xs leading-relaxed text-ink-light">
+          We'll use these details to review your feedback and, only if you ticked the box above, to publish it as a
+          testimonial. See our{' '}
+          <a href="/privacy" className="font-semibold text-navy underline hover:text-amber-dark">
+            Privacy Policy
+          </a>{' '}
+          for how we handle your data.
+        </p>
       </div>
 
       <div role="status" aria-live="polite">
