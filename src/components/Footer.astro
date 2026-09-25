@@ -1,5 +1,5 @@
 ---
-import { SITE, FOOTER_PAGES, COMPLIANCE_LINKS } from '../data/site';
+import { SITE, COMPANY, FOOTER_PAGES, COMPLIANCE_LINKS } from '../data/site';
 import Credentials from './Credentials.astro';
 
 const year = new Date().getFullYear();
@@ -52,7 +52,13 @@ const year = new Date().getFullYear();
       <Credentials compact />
     </div>
     <div class="container-page flex flex-col-reverse items-center gap-4 py-6 sm:flex-row sm:justify-between">
-      <p class="text-xs text-white/60">&copy; {year} {SITE.name}. All rights reserved.</p>
+      <div class="text-center text-xs leading-relaxed text-white/60 sm:text-left">
+        <p>&copy; {year} {COMPANY.legalName}. All rights reserved.</p>
+        <p>
+          Registered in {COMPANY.registeredIn} · Company No. {COMPANY.number} ·
+          Registered office: {COMPANY.registeredOffice}
+        </p>
+      </div>
       <div class="flex flex-wrap items-center justify-center gap-2.5">
         {
           COMPLIANCE_LINKS.map((item) => (

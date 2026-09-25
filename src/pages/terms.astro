@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { SITE } from '../data/site';
+import { SITE, COMPANY } from '../data/site';
 
 const lastUpdated = 'August 2026';
 ---
@@ -34,6 +34,11 @@ const lastUpdated = 'August 2026';
             {SITE.name} is an independent UK brokerage helping homeowners and businesses compare and switch energy,
             water and solar providers, and sourcing trades for building and renovation projects. We are not a
             supplier ourselves — we act as an intermediary between you and suppliers or contractors.
+          </p>
+          <p class="mt-3">
+            {SITE.name} is the trading name of {COMPANY.legalName}, a company
+            registered in {COMPANY.registeredIn} (company number {COMPANY.number}). Registered office:
+            {' '}{COMPANY.registeredOffice}.
           </p>
         </div>
 
