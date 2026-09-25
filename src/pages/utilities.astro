@@ -3,6 +3,10 @@ import Layout from '../layouts/Layout.astro';
 import CTABanner from '../components/CTABanner.astro';
 import Icon, { type IconName } from '../components/Icon.astro';
 
+// Pre-ticks these services on the contact form. Water is left out on purpose: it is
+// business-only, and this CTA is also used by households.
+const contactHref = '/contact?service=Electricity,Gas';
+
 const utilities: {
   title: string;
   audience: string;
@@ -79,7 +83,7 @@ const brokerReasons: { title: string; description: string; icon: IconName }[] = 
         is coming up.
       </p>
       <div class="mt-9">
-        <a href="/contact" class="btn-primary px-8 py-3.5 text-base">Book a Free Consultation</a>
+        <a href={contactHref} class="btn-primary px-8 py-3.5 text-base">Book a Free Consultation</a>
       </div>
     </div>
   </section>
@@ -139,5 +143,5 @@ const brokerReasons: { title: string; description: string; icon: IconName }[] = 
     </div>
   </section>
 
-  <CTABanner />
+  <CTABanner buttonHref={contactHref} />
 </Layout>

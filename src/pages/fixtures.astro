@@ -2,6 +2,9 @@
 import Layout from '../layouts/Layout.astro';
 import CTABanner from '../components/CTABanner.astro';
 import Icon from '../components/Icon.astro';
+
+// Pre-ticks this service on the contact form (see ContactForm.tsx).
+const contactHref = '/contact?service=Fixtures';
 import { TRADES } from '../data/site';
 
 const projectTypes = [
@@ -56,7 +59,7 @@ const managementSteps = [
         contact from start to finish.
       </p>
       <div class="mt-9">
-        <a href="/contact" class="btn-primary px-8 py-3.5 text-base">Book a Free Consultation</a>
+        <a href={contactHref} class="btn-primary px-8 py-3.5 text-base">Book a Free Consultation</a>
       </div>
     </div>
   </section>
@@ -117,6 +120,7 @@ const managementSteps = [
   </section>
 
   <CTABanner
+    buttonHref={contactHref}
     heading="Got a project in mind?"
     subheading="Tell us what you're planning and we'll help you get comparable quotes from trades we trust."
   />

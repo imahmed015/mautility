@@ -25,7 +25,8 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        // 'Inter Variable' is the self-hosted @fontsource-variable/inter font (see Layout.astro).
+        sans: ['"Inter Variable"', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
         card: '0 1px 2px rgba(10, 31, 68, 0.06), 0 4px 16px rgba(10, 31, 68, 0.06)',

@@ -3,6 +3,9 @@ import Layout from '../layouts/Layout.astro';
 import CTABanner from '../components/CTABanner.astro';
 import Icon, { type IconName } from '../components/Icon.astro';
 
+// Pre-ticks this service on the contact form (see ContactForm.tsx).
+const contactHref = '/contact?service=Solar';
+
 const helpItems = [
   {
     title: 'Installation',
@@ -69,7 +72,7 @@ const whyItems: { title: string; description: string; icon: IconName }[] = [
         to anything.
       </p>
       <div class="mt-9">
-        <a href="/contact" class="btn-primary px-8 py-3.5 text-base">Book a Free Consultation</a>
+        <a href={contactHref} class="btn-primary px-8 py-3.5 text-base">Book a Free Consultation</a>
       </div>
     </div>
   </section>
@@ -124,11 +127,11 @@ const whyItems: { title: string; description: string; icon: IconName }[] = [
           pointing you anywhere — no pressure, no obligation.
         </p>
         <div class="mt-6">
-          <a href="/contact" class="btn-secondary">Book a Free Consultation</a>
+          <a href={contactHref} class="btn-secondary">Book a Free Consultation</a>
         </div>
       </div>
     </div>
   </section>
 
-  <CTABanner />
+  <CTABanner buttonHref={contactHref} />
 </Layout>

@@ -1,13 +1,19 @@
-import { useId, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { SERVICE_OPTIONS, SITE } from '../data/site';
 import { useTurnstile } from '../hooks/useTurnstile';
 
+type CustomerType = '' | 'home' | 'business';
+
 type FormState = {
+  customerType: CustomerType;
+  businessName: string;
   fullName: string;
   email: string;
   phone: string;
   postcode: string;
   services: string[];
+  currentSupplier: string;
+  contractEnd: string;
   concern: string;
   callTime: string;
   message: string;
@@ -26,6 +32,15 @@ const CONCERN_OPTIONS = [
 
 const CALL_TIME_OPTIONS = ['Morning', 'Afternoon', 'Evening', 'Anytime'];
 
+const CUSTOMER_TYPES: { value: Exclude<CustomerType, ''>; label: string }[] = [
+  { value: 'home', label: 'My home' },
+  { value: 'business', label: 'A business' },
+];
+
+// Services with a supplier contract — the supplier/contract-end fields and the "have a
+// bill ready" tip only apply to these (not to solar or fixtures enquiries).
+const CONTRACT_SERVICES = ['Electricity', 'Gas', 'Water'];
+
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // Standard UK postcode pattern (covers all current formats, e.g. SW1A 1AA, M1 1AE, B33 8TH, CR2 6XH, DN55 1PT).
@@ -35,18 +50,28 @@ const UK_POSTCODE_REGEX =
   /^(?:([Gg][Ii][Rr] ?0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2}))$/i;
 
 const INITIAL_STATE: FormState = {
+  customerType: '',
+  businessName: '',
   fullName: '',
   email: '',
   phone: '',
   postcode: '',
   services: [],
+  currentSupplier: '',
+  contractEnd: '',
   concern: '',
   callTime: '',
   message: '',
 };
 
+const hasContractService = (services: string[]) => services.some((s) => CONTRACT_SERVICES.includes(s));
+
 function validate(values: FormState): FormErrors {
   const errors: FormErrors = {};
+
+  if (!values.customerType) {
+    errors.customerType = 'Please tell us whether this is for your home or a business.';
+  }
 
   if (!values.fullName.trim()) {
     errors.fullName = 'Please enter your full name.';
@@ -95,12 +120,26 @@ export default function ContactForm() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
   const [serverMessage, setServerMessage] = useState('');
+  // What was just sent — the form resets on success, so the success message reads from this.
+  const [submitted, setSubmitted] = useState<Pick<FormState, 'customerType' | 'services'> | null>(null);
   const idPrefix = useId();
+  const bookingsUrl = import.meta.env.PUBLIC_BOOKINGS_URL;
   const turnstileRef = useRef<HTMLDivElement>(null);
   const { token: turnstileToken, reset: resetTurnstile } = useTurnstile(
     turnstileRef,
     import.meta.env.PUBLIC_TURNSTILE_SITE_KEY,
   );
+
+  // Pre-tick services passed from a service page's CTA, e.g. /contact?service=Solar or
+  // ?service=Electricity,Gas. Runs after hydration (not in initial state) so the server-
+  // rendered HTML and React's first render match. Unknown names are ignored.
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get('service');
+    if (!requested) return;
+    const wanted = requested.split(',').map((s) => s.trim().toLowerCase());
+    const services = SERVICE_OPTIONS.filter((option) => wanted.includes(option.toLowerCase()));
+    if (services.length) setValues((prev) => ({ ...prev, services }));
+  }, []);
 
   const setField = <K extends keyof FormState>(key: K, value: FormState[K]) => {
     setValues((prev) => ({ ...prev, [key]: value }));
@@ -150,6 +189,7 @@ export default function ContactForm() {
 
     try {
       const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
+      const isBusiness = values.customerType === 'business';
 
       const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
@@ -159,13 +199,19 @@ export default function ContactForm() {
         },
         body: JSON.stringify({
           access_key: accessKey,
-          subject: 'New enquiry — MA Utility Solutions website',
+          subject: `New ${isBusiness ? 'business' : 'home'} enquiry — MA Utility Solutions website`,
           from_name: values.fullName,
+          customer_type: isBusiness ? 'Business' : 'Home',
+          ...(isBusiness && { business_name: values.businessName.trim() || '(not provided)' }),
           full_name: values.fullName,
           email: values.email,
           phone: values.phone,
           postcode: values.postcode,
           services_interested_in: values.services.join(', '),
+          ...(hasContractService(values.services) && {
+            current_supplier: values.currentSupplier.trim() || '(not provided)',
+            contract_end_date: values.contractEnd.trim() || '(not provided)',
+          }),
           main_concern: values.concern,
           best_time_to_call: values.callTime,
           message: values.message || '(no message provided)',
@@ -176,6 +222,7 @@ export default function ContactForm() {
       const result = await response.json();
 
       if (result.success) {
+        setSubmitted({ customerType: values.customerType, services: values.services });
         setStatus('success');
         setValues(INITIAL_STATE);
         setErrors({});
@@ -218,6 +265,60 @@ export default function ContactForm() {
           hook (see src/hooks/useTurnstile.ts) after hydration, not via the script's
           auto-scan, to avoid a DOM-mutation-vs-hydration race that breaks React. */}
       {import.meta.env.PUBLIC_TURNSTILE_SITE_KEY && <div ref={turnstileRef} />}
+
+      <fieldset aria-describedby={errors.customerType ? fieldId('customerType-error') : undefined}>
+        <legend className="field-label">
+          Is this for your home or a business? <span className="text-amber-ink">*</span>
+        </legend>
+        <div className="flex flex-wrap gap-3">
+          {CUSTOMER_TYPES.map(({ value, label }) => {
+            const radioId = fieldId(`type-${value}`);
+            const checked = values.customerType === value;
+            return (
+              <label
+                key={value}
+                htmlFor={radioId}
+                className={`flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition ${
+                  checked ? 'border-amber bg-amber/15 text-navy' : 'border-slate-300 text-ink-light hover:border-amber/60'
+                }`}
+              >
+                <input
+                  id={radioId}
+                  type="radio"
+                  name="customerType"
+                  value={value}
+                  checked={checked}
+                  onChange={() => setField('customerType', value)}
+                  className="h-4 w-4 border-slate-400 text-amber-dark focus:ring-amber"
+                />
+                {label}
+              </label>
+            );
+          })}
+        </div>
+        {errors.customerType && (
+          <p id={fieldId('customerType-error')} className="field-error">
+            {errors.customerType}
+          </p>
+        )}
+      </fieldset>
+
+      {values.customerType === 'business' && (
+        <div>
+          <label htmlFor={fieldId('businessName')} className="field-label">
+            Business name <span className="font-normal text-ink-light">(optional)</span>
+          </label>
+          <input
+            id={fieldId('businessName')}
+            name="businessName"
+            type="text"
+            autoComplete="organization"
+            value={values.businessName}
+            onChange={(e) => setField('businessName', e.target.value)}
+            className="field-input"
+          />
+        </div>
+      )}
 
       <div className="grid gap-6 sm:grid-cols-2">
         <div>
@@ -342,7 +443,49 @@ export default function ContactForm() {
           })}
         </div>
         {errors.services && <p className="field-error">{errors.services}</p>}
+        {values.customerType === 'home' && values.services.includes('Water') && (
+          <p className="mt-3 rounded-lg bg-amber/10 px-4 py-3 text-sm leading-relaxed text-navy ring-1 ring-amber/30">
+            Just so you know: UK law doesn't allow households to switch water supplier, so our water service is
+            for businesses only. We can still help with your other services.
+          </p>
+        )}
       </fieldset>
+
+      {hasContractService(values.services) && (
+        <div className="grid gap-6 sm:grid-cols-2">
+          <div>
+            <label htmlFor={fieldId('currentSupplier')} className="field-label">
+              Current supplier <span className="font-normal text-ink-light">(optional)</span>
+            </label>
+            <input
+              id={fieldId('currentSupplier')}
+              name="currentSupplier"
+              type="text"
+              placeholder="e.g. British Gas"
+              value={values.currentSupplier}
+              onChange={(e) => setField('currentSupplier', e.target.value)}
+              className="field-input"
+            />
+          </div>
+
+          <div>
+            <label htmlFor={fieldId('contractEnd')} className="field-label">
+              Contract end date <span className="font-normal text-ink-light">(if you know it)</span>
+            </label>
+            {/* Free text rather than type="month": Firefox and desktop Safari don't support
+                month pickers, and "around March next year" is still useful to us. */}
+            <input
+              id={fieldId('contractEnd')}
+              name="contractEnd"
+              type="text"
+              placeholder="e.g. March 2027"
+              value={values.contractEnd}
+              onChange={(e) => setField('contractEnd', e.target.value)}
+              className="field-input"
+            />
+          </div>
+        </div>
+      )}
 
       <div className="grid gap-6 sm:grid-cols-2">
         <div>
@@ -429,9 +572,26 @@ export default function ContactForm() {
 
       <div role="status" aria-live="polite">
         {status === 'success' && (
-          <p className="rounded-lg bg-green-50 px-4 py-3 text-sm font-medium text-green-800 ring-1 ring-green-200">
-            Thanks — your enquiry has been sent. We'll be in touch shortly to arrange your free consultation.
-          </p>
+          <div className="space-y-2 rounded-lg bg-green-50 px-4 py-3 text-sm leading-relaxed text-green-800 ring-1 ring-green-200">
+            <p className="font-medium">
+              Thanks — your enquiry has been sent. We'll get back to you within one working day, from {SITE.email}.
+            </p>
+            {submitted && hasContractService(submitted.services) && (
+              <p>
+                To make the call quicker, have a recent bill to hand — for electricity and gas it shows your meter
+                numbers (MPAN/MPRN) — and your contract end date if you know it.
+              </p>
+            )}
+            {submitted?.customerType === 'business' && bookingsUrl && (
+              <p>
+                Prefer to pick a time now?{' '}
+                <a href={bookingsUrl} target="_blank" rel="noopener noreferrer" className="font-semibold underline">
+                  Book your free consultation
+                </a>{' '}
+                (opens our Microsoft Bookings calendar).
+              </p>
+            )}
+          </div>
         )}
         {status === 'error' && (
           <p className="rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-700 ring-1 ring-red-200">
