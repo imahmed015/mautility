@@ -1,6 +1,14 @@
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
-import { SERVICE_OPTIONS, SITE } from '../data/site';
+import { SERVICE_OPTIONS } from '../data/site';
 import { useTurnstile } from '../hooks/useTurnstile';
+import {
+  EMAIL_REGEX,
+  GENERIC_ERROR,
+  SECURITY_CHECK_PENDING,
+  WEB3FORMS_ACCESS_KEY,
+  WEB3FORMS_ENDPOINT,
+  submitToWeb3Forms,
+} from '../lib/web3forms';
 
 type FormState = {
   name: string;
@@ -15,7 +23,6 @@ type FormErrors = Partial<Record<keyof FormState, string>>;
 
 const RATING_OPTIONS = ['Excellent', 'Good', 'Average', 'Poor'];
 
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const INITIAL_STATE: FormState = {
   name: '',
@@ -112,57 +119,37 @@ export default function FeedbackForm() {
       return;
     }
 
-    // See ContactForm.tsx — avoid a confusing Web3Forms rejection when the spam check
-    // hasn't produced a token yet.
+    // Submitting before the spam check has finished would just be rejected by Web3Forms.
     if (import.meta.env.PUBLIC_TURNSTILE_SITE_KEY && !turnstileToken) {
       setStatus('error');
-      setServerMessage(
-        `Please wait a moment for the security check to finish, then try again. If it keeps happening, email us at ${SITE.email}.`,
-      );
+      setServerMessage(SECURITY_CHECK_PENDING);
       return;
     }
 
     setStatus('sending');
     setServerMessage('');
 
-    try {
-      const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
+    const result = await submitToWeb3Forms({
+      subject: 'New private feedback — MA Utility Solutions website',
+      from_name: values.name,
+      name: values.name,
+      email: values.email,
+      services_used: values.services.join(', ') || '(not specified)',
+      rating: values.rating,
+      feedback: values.feedback,
+      consent_to_publish_as_testimonial: values.consentToPublish ? 'YES' : 'No',
+      'cf-turnstile-response': turnstileToken,
+    });
+    // Tokens are single-use — always get a fresh one, whatever the outcome.
+    resetTurnstile();
 
-      const response = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify({
-          access_key: accessKey,
-          subject: 'New private feedback — MA Utility Solutions website',
-          from_name: values.name,
-          name: values.name,
-          email: values.email,
-          services_used: values.services.join(', ') || '(not specified)',
-          rating: values.rating,
-          feedback: values.feedback,
-          consent_to_publish_as_testimonial: values.consentToPublish ? 'YES' : 'No',
-          'cf-turnstile-response': turnstileToken,
-        }),
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        setStatus('success');
-        setValues(INITIAL_STATE);
-        setErrors({});
-      } else {
-        setStatus('error');
-        setServerMessage(result.message || 'Something went wrong. Please try again or email us directly.');
-      }
-    } catch {
+    if (result.ok) {
+      setStatus('success');
+      setValues(INITIAL_STATE);
+      setErrors({});
+    } else {
       setStatus('error');
-      setServerMessage('We could not reach the server. Please check your connection and try again.');
-    } finally {
-      resetTurnstile();
+      setServerMessage(result.message);
     }
   };
 
@@ -176,9 +163,9 @@ export default function FeedbackForm() {
       onSubmit={handleSubmit}
       className="space-y-6"
       method="POST"
-      action="https://api.web3forms.com/submit"
+      action={WEB3FORMS_ENDPOINT}
     >
-      <input type="hidden" name="access_key" value={import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY} />
+      <input type="hidden" name="access_key" value={WEB3FORMS_ACCESS_KEY} />
       <input type="hidden" name="subject" value="New private feedback — MA Utility Solutions website" />
 
       {/* Honeypot field — hidden from real users; left blank by them, but bots tend to fill every field. */}
@@ -356,7 +343,7 @@ export default function FeedbackForm() {
         )}
         {status === 'error' && (
           <p className="rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-700 ring-1 ring-red-200">
-            {serverMessage || 'Something went wrong. Please try again or email us directly.'}
+            {serverMessage || GENERIC_ERROR}
           </p>
         )}
       </div>

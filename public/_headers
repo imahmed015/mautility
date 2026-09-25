@@ -13,10 +13,10 @@
 #     frISRX4G... = RenewalHelper.astro renewal-timing helper (author-written, /utilities)
 #   The 2 Astro-generated hashes are framework runtime code and WILL change if the
 #   astro/vite version changes, or if hydration directives (client:load/visible/idle)
-#   are added/removed/moved between pages — rebuild and recompute if inline scripts
-#   start getting blocked again. To regenerate: build the site, then for each unique
-#   inline <script>...</script> body (exact text, no trimming) across every dist/**/*.html
-#   file, compute base64(sha256(body)) and prefix with 'sha256-'.
+#   are added/removed/moved between pages. You don't need to compute them by hand:
+#   `npm run build` runs scripts/check-csp.mjs, which fails the build and prints the
+#   exact hash to add here if any inline script isn't allowlisted (`npm run check:csp`
+#   runs it on its own). It also warns about hashes here that are no longer used.
 # - Cloudflare Turnstile (spam protection on ContactForm.tsx / FeedbackForm.tsx) needs
 #   its script, iframe and verification XHR allowlisted: script-src, frame-src and
 #   connect-src all include https://challenges.cloudflare.com.

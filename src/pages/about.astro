@@ -2,11 +2,12 @@
 import Layout from '../layouts/Layout.astro';
 import CTABanner from '../components/CTABanner.astro';
 import Credentials from '../components/Credentials.astro';
+import { STATS } from '../data/site';
 
 const stats = [
-  { label: 'Accounts personally managed', value: '300+' },
-  { label: "Hands-on industry experience", value: '1+ year' },
-  { label: 'Market coverage', value: '100%' },
+  { label: 'Accounts personally managed', value: STATS.accountsManaged },
+  { label: 'Hands-on industry experience', value: STATS.experience },
+  { label: 'Market coverage', value: STATS.marketCoverage },
 ];
 
 const values = [
@@ -27,7 +28,7 @@ const values = [
 
 <Layout
   title="About Us"
-  description="MA Utility Solutions was founded on hands-on experience managing 300+ utility accounts. Read our founder's story and why we built an independent, whole-of-market brokerage."
+  description={`MA Utility Solutions was founded on hands-on experience managing ${STATS.accountsManaged} utility accounts. Read our founder's story and why we built an independent, whole-of-market brokerage.`}
 >
   <section class="bg-navy">
     <div class="container-page section-padding text-center">

@@ -51,7 +51,9 @@ Opens at `http://localhost:4321`.
 npm run build
 ```
 
-This runs `astro check` (type-checking) then `astro build`, producing a fully static site in `dist/`. If you just want a fast build without type-checking, use `npm run build:nocheck`.
+This runs `astro check` (type-checking), then `astro build` (producing a fully static site in `dist/`), then `scripts/check-csp.mjs`. That last step fails the build if any inline script isn't allowlisted by its sha256 hash in the Content-Security-Policy in `public/_headers` — otherwise browsers would silently block it in production. The error prints the exact hash to add. Cloudflare Pages runs the same command, so a failed check keeps the previous deploy live. Run it on its own with `npm run check:csp`.
+
+If you just want a fast build without type-checking or the CSP check, use `npm run build:nocheck`.
 
 Preview the production build locally:
 
@@ -102,15 +104,19 @@ Then in Cloudflare Pages, choose **Upload assets** and upload the contents of `d
 
 ```
 src/
-  components/       Shared Astro components + React islands (forms, accordion);
-                    Icon.astro is the single icon library, Credentials.astro the trust strip
+  components/       Shared Astro components + React islands (the two forms);
+                    Icon.astro is the single icon library, Credentials.astro the trust strip,
+                    PageHero.astro the photo hero on the service pages
   assets/images/     Page photos (licensed). Used via <Picture> from astro:assets, which
                     builds AVIF/WebP at several widths — keep originals large (1600px+)
   hooks/             React hooks (useTurnstile.ts)
   content/guides/    Guide articles (Markdown) — see "Publishing a guide" below
   lib/guides.ts      Which guides are visible (drafts in dev only) — used by pages, nav, sitemap
+  lib/web3forms.ts   Shared Web3Forms submit helper + messages for both forms
+scripts/
+  check-csp.mjs      Post-build check that every inline script is allowlisted in the CSP
   data/site.ts       Central content: nav links, footer links, trades list, contact details,
-                    statutory company details (COMPANY)
+                    statutory company details (COMPANY), shared headline figures (STATS)
   layouts/Layout.astro  Global <head>, SEO meta, Navbar/Footer wrapper
   pages/             One .astro file per route (10 pages + 404)
   styles/global.css  Tailwind + design-system utility classes (.btn-primary, .card, etc.)

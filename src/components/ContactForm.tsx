@@ -1,6 +1,14 @@
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { SERVICE_OPTIONS, SITE } from '../data/site';
 import { useTurnstile } from '../hooks/useTurnstile';
+import {
+  EMAIL_REGEX,
+  GENERIC_ERROR,
+  SECURITY_CHECK_PENDING,
+  WEB3FORMS_ACCESS_KEY,
+  WEB3FORMS_ENDPOINT,
+  submitToWeb3Forms,
+} from '../lib/web3forms';
 
 type CustomerType = '' | 'home' | 'business';
 
@@ -41,7 +49,6 @@ const CUSTOMER_TYPES: { value: Exclude<CustomerType, ''>; label: string }[] = [
 // bill ready" tip only apply to these (not to solar or fixtures enquiries).
 const CONTRACT_SERVICES = ['Electricity', 'Gas', 'Water'];
 
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // Standard UK postcode pattern (covers all current formats, e.g. SW1A 1AA, M1 1AE, B33 8TH, CR2 6XH, DN55 1PT).
 // The outer (?:...) group matters: without it, ^ only applied to the GIR 0AA branch and
@@ -213,67 +220,47 @@ export default function ContactForm() {
       return;
     }
 
-    // Submitting before the spam check has finished (or when it's blocked, e.g. by a
-    // privacy extension) would just be rejected by Web3Forms with an unclear error.
+    // Submitting before the spam check has finished would just be rejected by Web3Forms.
     if (import.meta.env.PUBLIC_TURNSTILE_SITE_KEY && !turnstileToken) {
       setStatus('error');
-      setServerMessage(
-        `Please wait a moment for the security check to finish, then try again. If it keeps happening, email us at ${SITE.email}.`,
-      );
+      setServerMessage(SECURITY_CHECK_PENDING);
       return;
     }
 
     setStatus('sending');
     setServerMessage('');
 
-    try {
-      const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
-      const isBusiness = values.customerType === 'business';
+    const isBusiness = values.customerType === 'business';
+    const result = await submitToWeb3Forms({
+      subject: `New ${isBusiness ? 'business' : 'home'} enquiry — MA Utility Solutions website`,
+      from_name: values.fullName,
+      customer_type: isBusiness ? 'Business' : 'Home',
+      ...(isBusiness && { business_name: values.businessName.trim() || '(not provided)' }),
+      full_name: values.fullName,
+      email: values.email,
+      phone: values.phone,
+      postcode: values.postcode,
+      services_interested_in: values.services.join(', '),
+      ...(hasContractService(values.services) && {
+        current_supplier: values.currentSupplier.trim() || '(not provided)',
+        contract_end_date: values.contractEnd.trim() || '(not provided)',
+      }),
+      main_concern: values.concern,
+      best_time_to_call: values.callTime,
+      message: values.message || '(no message provided)',
+      'cf-turnstile-response': turnstileToken,
+    });
+    // Tokens are single-use — always get a fresh one, whatever the outcome.
+    resetTurnstile();
 
-      const response = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify({
-          access_key: accessKey,
-          subject: `New ${isBusiness ? 'business' : 'home'} enquiry — MA Utility Solutions website`,
-          from_name: values.fullName,
-          customer_type: isBusiness ? 'Business' : 'Home',
-          ...(isBusiness && { business_name: values.businessName.trim() || '(not provided)' }),
-          full_name: values.fullName,
-          email: values.email,
-          phone: values.phone,
-          postcode: values.postcode,
-          services_interested_in: values.services.join(', '),
-          ...(hasContractService(values.services) && {
-            current_supplier: values.currentSupplier.trim() || '(not provided)',
-            contract_end_date: values.contractEnd.trim() || '(not provided)',
-          }),
-          main_concern: values.concern,
-          best_time_to_call: values.callTime,
-          message: values.message || '(no message provided)',
-          'cf-turnstile-response': turnstileToken,
-        }),
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        setSubmitted({ customerType: values.customerType, services: values.services });
-        setStatus('success');
-        setValues(INITIAL_STATE);
-        setErrors({});
-      } else {
-        setStatus('error');
-        setServerMessage(result.message || 'Something went wrong. Please try again or email us directly.');
-      }
-    } catch {
+    if (result.ok) {
+      setSubmitted({ customerType: values.customerType, services: values.services });
+      setStatus('success');
+      setValues(INITIAL_STATE);
+      setErrors({});
+    } else {
       setStatus('error');
-      setServerMessage('We could not reach the server. Please check your connection and try again.');
-    } finally {
-      resetTurnstile();
+      setServerMessage(result.message);
     }
   };
 
@@ -290,9 +277,9 @@ export default function ContactForm() {
       onSubmit={handleSubmit}
       className="space-y-6"
       method="POST"
-      action="https://api.web3forms.com/submit"
+      action={WEB3FORMS_ENDPOINT}
     >
-      <input type="hidden" name="access_key" value={import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY} />
+      <input type="hidden" name="access_key" value={WEB3FORMS_ACCESS_KEY} />
       <input type="hidden" name="subject" value="New enquiry — MA Utility Solutions website" />
 
       {/* Honeypot field — hidden from real users, left blank by them; bots tend to fill every field. */}
@@ -639,7 +626,7 @@ export default function ContactForm() {
         )}
         {status === 'error' && (
           <p className="rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-700 ring-1 ring-red-200">
-            {serverMessage || 'Something went wrong. Please try again or email us directly.'}
+            {serverMessage || GENERIC_ERROR}
           </p>
         )}
       </div>

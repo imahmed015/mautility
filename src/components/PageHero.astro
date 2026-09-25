@@ -1,0 +1,49 @@
+---
+// Full-bleed photo hero used at the top of the service pages (solar, fixtures, utilities):
+// photo behind a navy overlay (for text contrast), eyebrow, headline, intro and one CTA.
+// The intro paragraph is the default slot.
+//
+// The photo is served as responsive AVIF/WebP with a JPEG fallback (Astro defaults to PNG,
+// far heavier for photos). Widths are derived from the photo itself — never wider than the
+// original, since images can't be scaled up — so swapping in a larger photo needs no code
+// change here.
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  image: ImageMetadata;
+  imageAlt: string;
+  ctaHref: string;
+  ctaLabel?: string;
+}
+
+const { eyebrow, title, image, imageAlt, ctaHref, ctaLabel = 'Book a Free Consultation' } = Astro.props;
+
+const CANDIDATE_WIDTHS = [640, 960, 1280, 1920];
+const widths = [...CANDIDATE_WIDTHS.filter((w) => w < image.width), Math.min(image.width, 1920)];
+---
+
+<section class="relative overflow-hidden bg-navy">
+  <Picture
+    src={image}
+    formats={['avif', 'webp']}
+    fallbackFormat="jpg"
+    widths={widths}
+    sizes="100vw"
+    alt={imageAlt}
+    class="absolute inset-0 h-full w-full object-cover"
+    loading="eager"
+    fetchpriority="high"
+  />
+  <div class="absolute inset-0 bg-navy/75" aria-hidden="true"></div>
+  <div class="container-page section-padding relative text-center">
+    <span class="eyebrow-inverse">{eyebrow}</span>
+    <h1 class="mx-auto mt-5 max-w-3xl text-4xl font-extrabold text-white sm:text-5xl">{title}</h1>
+    <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/75"><slot /></p>
+    <div class="mt-9">
+      <a href={ctaHref} class="btn-primary px-8 py-3.5 text-base">{ctaLabel}</a>
+    </div>
+  </div>
+</section>
